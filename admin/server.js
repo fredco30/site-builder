@@ -37,6 +37,9 @@ const app = express();
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// On est derrière un reverse proxy nginx en prod : req.ip = vrai IP client
+app.set('trust proxy', 1);
+
 app.use(session({
   secret: SESSION_SECRET,
   resave: false,
@@ -50,6 +53,61 @@ app.use(session({
 
 // Toutes les routes de l'admin sont sous /admin
 const ADMIN_PREFIX = '/admin';
+
+/* ----------------------------------------------------------
+   Rate limiting du login (anti-bruteforce)
+   - 5 tentatives ratées → blocage 10 min pour l'IP
+   - Fenêtre glissante de 15 min pour compter
+   - Stockage en mémoire (acceptable pour un admin mono-utilisateur)
+   ---------------------------------------------------------- */
+const failedLogins = new Map(); // ip → { count, firstAttempt, blockedUntil }
+const RL_MAX_ATTEMPTS    = 5;
+const RL_BLOCK_DURATION  = 10 * 60 * 1000; // 10 min
+const RL_ATTEMPT_WINDOW  = 15 * 60 * 1000; // 15 min
+
+function getClientIp(req) {
+  return req.ip || req.connection.remoteAddress || 'unknown';
+}
+
+function checkRateLimit(ip) {
+  const entry = failedLogins.get(ip);
+  if (!entry) return { allowed: true };
+  if (entry.blockedUntil && entry.blockedUntil > Date.now()) {
+    return { allowed: false, retryInSec: Math.ceil((entry.blockedUntil - Date.now()) / 1000) };
+  }
+  // Si la fenêtre est expirée, on reset
+  if (Date.now() - entry.firstAttempt > RL_ATTEMPT_WINDOW) {
+    failedLogins.delete(ip);
+  }
+  return { allowed: true };
+}
+
+function recordFailedLogin(ip) {
+  const now = Date.now();
+  let entry = failedLogins.get(ip);
+  if (!entry || now - entry.firstAttempt > RL_ATTEMPT_WINDOW) {
+    entry = { count: 0, firstAttempt: now, blockedUntil: 0 };
+  }
+  entry.count++;
+  if (entry.count >= RL_MAX_ATTEMPTS) {
+    entry.blockedUntil = now + RL_BLOCK_DURATION;
+  }
+  failedLogins.set(ip, entry);
+}
+
+function clearFailedLogins(ip) {
+  failedLogins.delete(ip);
+}
+
+// Nettoyage périodique des entrées trop anciennes
+setInterval(() => {
+  const cutoff = Date.now() - RL_ATTEMPT_WINDOW;
+  for (const [ip, entry] of failedLogins.entries()) {
+    if (entry.firstAttempt < cutoff && (!entry.blockedUntil || entry.blockedUntil < Date.now())) {
+      failedLogins.delete(ip);
+    }
+  }
+}, 5 * 60 * 1000);
 
 /* ----------------------------------------------------------
    Auth helpers
@@ -133,12 +191,25 @@ app.get(ADMIN_PREFIX + '/client', requireAuth, (req, res) => {
    Auth endpoints
    ---------------------------------------------------------- */
 app.post(ADMIN_PREFIX + '/api/login', (req, res) => {
+  const ip = getClientIp(req);
+
+  // Vérifie si l'IP est temporairement bloquée
+  const rl = checkRateLimit(ip);
+  if (!rl.allowed) {
+    return res.status(429).json({
+      error: `Trop de tentatives. Réessayez dans ${Math.ceil(rl.retryInSec / 60)} min.`
+    });
+  }
+
   const password = (req.body && req.body.password) || '';
   if (password === ADMIN_PASSWORD) {
+    clearFailedLogins(ip);
     req.session.authed = true;
     req.session.loginAt = Date.now();
     return res.json({ ok: true });
   }
+
+  recordFailedLogin(ip);
   return res.status(401).json({ error: 'Mot de passe incorrect' });
 });
 
