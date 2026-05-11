@@ -1,0 +1,332 @@
+{
+  "meta": {
+    "lang": "fr",
+    "title": "HIPOLEM Bâtiment - Rénovation de salle de bains, climatisation et chauffage",
+    "description": "Artisan spécialisé en rénovation de salle de bains, climatisation, chauffage et plomberie. Devis gratuit, intervention rapide et travail soigné.",
+    "og_title": "HIPOLEM Bâtiment - Rénovation salle de bains, climatisation, chauffage",
+    "og_description": "Artisan de confiance pour vos travaux neufs, rénovations et installations sur mesure.",
+    "og_image": "assets/images/hero-bathroom.png",
+    "version": "20260511a"
+  },
+
+  "business": {
+    "name": "HIPOLEM Bâtiment",
+    "siret": "452 157 118 00012"
+  },
+
+  "branding": {
+    "logo": "assets/logo/hipolem-logo.png",
+    "favicon": "assets/logo/favicon.svg",
+    "favicon_type": "image/svg+xml",
+    "theme_color": "#1a1a1a",
+    "fonts_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
+    "fonts": {
+      "heading": "'Montserrat', 'Segoe UI', Arial, sans-serif",
+      "body": "'Inter', 'Segoe UI', Arial, sans-serif"
+    },
+    "colors": {
+      "primary":        "#d4202a",
+      "primary_dark":   "#a8161e",
+      "secondary":      "#1873bf",
+      "secondary_dark": "#115b96",
+      "tertiary":       "#2e8a55",
+      "tertiary_dark":  "#226c43",
+      "dark":           "#1a1a1a"
+    }
+  },
+
+  "contact": {
+    "phone": "06 15 69 08 71",
+    "phone_link": "+33615690871",
+    "email": "ent.hipolem@gmail.com",
+    "service_area": "Interventions secteur local"
+  },
+
+  "topbar": {
+    "tagline": "Devis gratuit & sans engagement"
+  },
+
+  "nav": {
+    "items": [
+      { "label": "Accueil",        "href": "#accueil" },
+      { "label": "Salle de bains", "href": "#salle-de-bains" },
+      { "label": "Climatisation",  "href": "#climatisation" },
+      { "label": "Chauffage",      "href": "#chauffage" },
+      { "label": "Réalisations",   "href": "#realisations" },
+      { "label": "Contact",        "href": "#contact" }
+    ],
+    "cta_label": "Demander un devis"
+  },
+
+  "hero": {
+    "banner_desktop": "assets/images/banner-hero.jpg",
+    "banner_mobile":  "assets/images/banner-hero-mobile.png",
+    "banner_alt": "HIPOLEM Bâtiment - Aménagement de salle de bain neuf et rénovation, climatisation, chauffage et plomberie. Avec Hipolem, pas de problème !",
+    "title_html": "Rénovation de salle de bains, <span class=\"text-blue\">climatisation</span> et <span class=\"text-red\">chauffage</span>",
+    "subtitle": "Artisan de confiance pour vos travaux neufs, rénovations et installations sur mesure.",
+    "cta_primary":   { "label": "Obtenir un devis",       "href": "#contact" },
+    "cta_secondary": { "label": "Voir nos réalisations",  "href": "#realisations" }
+  },
+
+  "specialties": {
+    "eyebrow": "Nos prestations",
+    "title":   "Nos spécialités",
+    "lead":    "Quatre savoir-faire au service de votre confort, réalisés avec rigueur et finitions premium.",
+    "columns": 4,
+    "items": [
+      {
+        "accent": "green",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M7 13V5a3 3 0 0 1 6 0v1h-2V5a1 1 0 0 0-2 0v8h12v2H3v-2h4zm-1 4h12v3a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-3z\"/></svg>",
+        "title": "Salle de bains",
+        "text":  "Rénovation complète, douche à l'italienne, meuble vasque, faïence, robinetterie.",
+        "link":  "#salle-de-bains",
+        "link_label": "En savoir plus →"
+      },
+      {
+        "accent": "blue",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M12 2v4l2-2 1.4 1.4L12 8.8 8.6 5.4 10 4l2 2V2h0zM2 12h4L4 10l1.4-1.4L8.8 12l-3.4 3.4L4 14l2-2H2v0zm20 0h-4l2 2-1.4 1.4L15.2 12l3.4-3.4L20 10l-2 2h4v0zM12 22v-4l-2 2-1.4-1.4L12 15.2l3.4 3.4L14 20l-2-2v4h0z\"/></svg>",
+        "title": "Climatisation",
+        "text":  "Pose rapide, solutions performantes et excellent rapport qualité-prix.",
+        "link":  "#climatisation",
+        "link_label": "En savoir plus →"
+      },
+      {
+        "accent": "red",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M12 2s5 6 5 11a5 5 0 1 1-10 0c0-5 5-11 5-11zm-1 14a3 3 0 1 0 0-6 3 3 0 0 0 0 6z\"/></svg>",
+        "title": "Chauffage",
+        "text":  "Chaudières, radiateurs, chaufferies et CVC pour le neuf comme la rénovation.",
+        "link":  "#chauffage",
+        "link_label": "En savoir plus →"
+      },
+      {
+        "accent": "dark",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M3 5h6v4H7v2h4V7h2V5h6v6h-2v2h2v6h-6v-4h-2v4H9v-4H7v4H3v-6h2v-2H3V5z\"/></svg>",
+        "title": "Plomberie",
+        "text":  "Installations neuves, rénovations complètes, chaufferies et chantiers professionnels.",
+        "link":  "#chauffage",
+        "link_label": "En savoir plus →"
+      }
+    ]
+  },
+
+  "showcase": {
+    "enabled": true,
+    "anchor":  "salle-de-bains",
+    "accent":  "green",
+    "eyebrow": "Notre savoir-faire préféré",
+    "title":   "La salle de bains, notre cœur de métier",
+    "lead":    "Nous aimons transformer les salles de bains en espaces modernes, pratiques et élégants, adaptés à vos envies, à vos contraintes et à votre budget.",
+    "bullets": [
+      "Conception sur mesure et conseils personnalisés",
+      "Choix de matériaux fiables et esthétiques",
+      "Finitions soignées du sol au plafond",
+      "Respect des délais annoncés"
+    ],
+    "gallery_label": "Aperçu de salles de bains réalisées",
+    "gallery": [
+      { "src": "assets/images/bathroom-showcase-1.png", "alt": "Douche à l'italienne avec meuble vasque suspendu" },
+      { "src": "assets/images/bathroom-showcase-2.png", "alt": "Salle de bains moderne avec miroir lumineux rond" },
+      { "src": "assets/images/bathroom-1.jpg", "alt": "Salle de bains rénovée — réalisation HIPOLEM" },
+      { "src": "assets/images/bathroom-2.jpg", "alt": "Détail carrelage et faïence — réalisation HIPOLEM" }
+    ],
+    "cta": { "label": "Découvrir nos réalisations", "href": "#realisations" }
+  },
+
+  "service_detail": {
+    "enabled": true,
+    "accent":  "green",
+    "eyebrow": "Rénovation de salle de bains",
+    "title":   "Tout ce que nous savons faire",
+    "lead":    "Du simple remplacement à la rénovation complète clé en main.",
+    "items": [
+      { "title": "Douche à l'italienne",     "text": "Receveur extra-plat, parois fixes ou coulissantes, étanchéité maîtrisée pour un usage quotidien serein." },
+      { "title": "Meuble vasque",            "text": "Meubles suspendus design, simples ou doubles vasques, avec rangements optimisés." },
+      { "title": "Faïence & carrelage",      "text": "Pose droite, en chevron ou décor : sols et murs adaptés à votre style." },
+      { "title": "Robinetterie",             "text": "Mitigeurs thermostatiques, colonnes de douche, becs cascade : confort et durabilité." },
+      { "title": "Remplacement de baignoire","text": "Transformation rapide d'une baignoire en douche sécurisée et accessible." },
+      { "title": "Rénovation complète",      "text": "Démolition, plomberie, électricité, carrelage, sanitaires : un seul interlocuteur du début à la fin." }
+    ]
+  },
+
+  "service_secondary": {
+    "enabled": true,
+    "anchor":  "climatisation",
+    "accent":  "blue",
+    "eyebrow": "Climatisation",
+    "title":   "Rapide à poser, efficace au quotidien",
+    "lead":    "Une solution idéale pour améliorer votre confort rapidement, avec un investissement maîtrisé.",
+    "image_main":     "assets/images/climate-living.png",
+    "image_main_alt": "Split mural intérieur installé dans un salon moderne",
+    "image_sub":      "assets/images/climate-1.jpg",
+    "image_sub_alt":  "Pose d'un split de climatisation par HIPOLEM",
+    "features": [
+      { "title": "Pose rapide",                 "text": "Installation en 1 à 2 jours selon configuration." },
+      { "title": "Confort été / hiver",         "text": "Rafraîchissement l'été, chauffage d'appoint l'hiver selon équipement." },
+      { "title": "Solution propre et discrète", "text": "Unités compactes, pose nette et finitions soignées." },
+      { "title": "Bon rapport qualité-prix",    "text": "Matériel sélectionné pour sa fiabilité et son rendement." }
+    ],
+    "cta": { "label": "Demander un devis climatisation", "href": "#contact" }
+  },
+
+  "service_tertiary": {
+    "enabled": true,
+    "anchor":  "chauffage",
+    "accent":  "red",
+    "eyebrow": "Chauffage, plomberie & CVC",
+    "title":   "Du dépannage au chantier complet, particuliers & professionnels",
+    "lead":    "Que vous soyez un particulier pour un entretien ponctuel ou un professionnel pour la mise en place complète d'une installation, nous adaptons notre savoir-faire à l'ampleur de votre projet.",
+    "checks": [
+      "Installation de chaufferie",
+      "CVC (chauffage, ventilation, climatisation)",
+      "Plomberie neuve & rénovation",
+      "Chantiers professionnels (locaux pro, ERP)",
+      "Remplacement de radiateurs & chaudières",
+      "Entretien & dépannage"
+    ],
+    "note_html": "<strong>Vous êtes professionnel ?</strong> Nous intervenons aussi sur des projets de grande ampleur (bureaux, commerces, chaufferies collectives) avec un suivi de chantier rigoureux.",
+    "cta":   { "label": "Discuter de votre projet", "href": "#contact" },
+    "image": "assets/images/heating-radiator.png",
+    "image_alt": "Radiateur installé dans un séjour, ambiance chaleureuse"
+  },
+
+  "method": {
+    "enabled": true,
+    "eyebrow": "Notre méthode",
+    "title":   "De l'écoute du besoin à la livraison",
+    "lead":    "Une approche simple et transparente, à chaque étape de votre projet.",
+    "steps": [
+      { "num": 1, "title": "Écoute du besoin",      "text": "Nous échangeons sur votre projet, vos envies, vos contraintes et votre budget." },
+      { "num": 2, "title": "Proposition & devis",   "text": "Nous vous proposons une solution adaptée avec un devis clair, détaillé et gratuit." },
+      { "num": 3, "title": "Réalisation du chantier","text": "Les travaux sont réalisés avec soin, dans le respect des délais et des finitions attendues." },
+      { "num": 4, "title": "Livraison soignée",     "text": "Chaque détail est vérifié avant la livraison du chantier." }
+    ]
+  },
+
+  "why": {
+    "enabled": true,
+    "eyebrow": "Pourquoi nous choisir",
+    "title":   "Pourquoi choisir HIPOLEM Bâtiment ?",
+    "columns": 4,
+    "items": [
+      {
+        "accent": "green",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"m9 16.2-3.5-3.6L4 14l5 5 11-11-1.4-1.4z\"/></svg>",
+        "title": "Travail soigné",
+        "text":  "Des finitions propres et un chantier respecté de A à Z."
+      },
+      {
+        "accent": "blue",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z\"/></svg>",
+        "title": "Matériel de qualité",
+        "text":  "Nous sélectionnons du matériel fiable, durable et performant."
+      },
+      {
+        "accent": "red",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"M13 2 3 14h7l-1 8 10-12h-7l1-8z\"/></svg>",
+        "title": "Intervention rapide",
+        "text":  "Nous nous engageons à intervenir rapidement selon vos besoins."
+      },
+      {
+        "accent": "dark",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z\"/></svg>",
+        "title": "Devis gratuit",
+        "text":  "Un devis clair, détaillé et sans engagement."
+      }
+    ]
+  },
+
+  "gallery": {
+    "enabled": true,
+    "anchor":  "realisations",
+    "eyebrow": "Réalisations",
+    "title":   "Quelques réalisations",
+    "lead":    "Un aperçu de nos chantiers récents en salle de bains et climatisation.",
+    "filters": [
+      { "slug": "all",      "label": "Tout",          "active": true,  "aria_selected": "true" },
+      { "slug": "bathroom", "label": "Salle de bains","active": false, "aria_selected": "false" },
+      { "slug": "climate",  "label": "Climatisation", "active": false, "aria_selected": "false" }
+    ],
+    "items": [
+      { "cat": "bathroom", "src": "assets/images/bathroom-1.jpg", "alt": "Salle de bains contemporaine avec douche à l'italienne", "caption": "Salle de bains contemporaine" },
+      { "cat": "bathroom", "src": "assets/images/bathroom-2.jpg", "alt": "Douche à l'italienne avec parois en verre",              "caption": "Douche à l'italienne" },
+      { "cat": "bathroom", "src": "assets/images/bathroom-3.jpg", "alt": "Meuble vasque suspendu et miroir lumineux",              "caption": "Meuble vasque suspendu" },
+      { "cat": "bathroom", "src": "assets/images/bathroom-4.jpg", "alt": "Rénovation complète de salle de bains",                  "caption": "Rénovation complète" },
+      { "cat": "bathroom", "src": "assets/images/bathroom-5.jpg", "alt": "Faïence et carrelage modernes",                          "caption": "Faïence & carrelage" },
+      { "cat": "bathroom", "src": "assets/images/bathroom-6.jpg", "alt": "Détail finitions salle de bains",                        "caption": "Finitions soignées" },
+      { "cat": "climate",  "src": "assets/images/climate-1.jpg",  "alt": "Pose d'un split mural de climatisation",                 "caption": "Pose de climatisation" },
+      { "cat": "climate",  "src": "assets/images/climate-2.jpg",  "alt": "Installation extérieure de climatisation",               "caption": "Installation extérieure" }
+    ]
+  },
+
+  "reviews": {
+    "enabled": true,
+    "eyebrow": "Avis clients",
+    "title":   "Ils nous ont fait confiance",
+    "lead":    "Quelques retours de nos clients particuliers.",
+    "items": [
+      {
+        "stars": 5,
+        "stars_html": "★★★★★",
+        "text":   "« Rénovation complète de notre salle de bains : le résultat est superbe. Travail propre, conseils pertinents et finitions très soignées. »",
+        "author": "Client particulier"
+      },
+      {
+        "stars": 5,
+        "stars_html": "★★★★★",
+        "text":   "« Intervention rapide pour la pose d'une climatisation. Devis clair, chantier propre et matériel de qualité. »",
+        "author": "Client particulier"
+      },
+      {
+        "stars": 5,
+        "stars_html": "★★★★★",
+        "text":   "« Échange agréable, devis détaillé et chantier respecté à la journée près. Je recommande sans hésiter pour des travaux de plomberie. »",
+        "author": "Client particulier"
+      }
+    ]
+  },
+
+  "contact_section": {
+    "eyebrow": "Contact",
+    "title":   "Un projet ? Parlons-en !",
+    "lead":    "Remplissez le formulaire, nous vous rappelons rapidement pour échanger sur votre projet.",
+    "note":    "Devis gratuit · Réponse rapide · Sans engagement"
+  },
+
+  "contact_form": {
+    "action":  "https://formspree.io/f/VOTRE_ID_FORMSPREE",
+    "subject": "Nouvelle demande de devis - HIPOLEM Bâtiment",
+    "title":   "Demander un devis",
+    "project_types": [
+      { "value": "salle-de-bains", "label": "Salle de bains" },
+      { "value": "climatisation",  "label": "Climatisation"  },
+      { "value": "chauffage",      "label": "Chauffage"      },
+      { "value": "plomberie",      "label": "Plomberie"      },
+      { "value": "autre",          "label": "Autre"          }
+    ],
+    "submit_label": "Être rappelé",
+    "legal":  "En soumettant ce formulaire, vous acceptez d'être recontacté concernant votre demande."
+  },
+
+  "footer": {
+    "tagline":  "Avec Hipolem, pas de problème !",
+    "services": [
+      "Rénovation salle de bains",
+      "Pose de climatisation",
+      "Chauffage & radiateurs",
+      "Plomberie",
+      "Entretien & dépannage"
+    ],
+    "signature": {
+      "enabled": true,
+      "url":     "https://www.geoclic.fr",
+      "image_desktop": "assets/images/signature-geoclic-banner.png",
+      "image_mobile":  "assets/images/signature-geoclic.png",
+      "alt":  "Site internet créé par Geoclic Suite — Frédéric Lopez",
+      "aria": "Site conçu par Geoclic Suite — Frédéric Lopez"
+    },
+    "legal_links": [
+      { "label": "Mentions légales",            "href": "#" },
+      { "label": "Politique de confidentialité","href": "#" }
+    ]
+  }
+}

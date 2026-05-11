@@ -1,0 +1,329 @@
+{
+  "_comment": "Démo fictive — paysagiste imaginaire. Toutes les images sont des placeholders picsum.photos à remplacer par les vraies photos du client.",
+
+  "meta": {
+    "lang": "fr",
+    "title": "Jardins du Sud - Paysagiste à Aix-en-Provence",
+    "description": "Création de jardins, entretien, élagage et arrosage automatique. Devis gratuit, intervention rapide et savoir-faire reconnu en Provence.",
+    "og_title": "Jardins du Sud - Paysagiste à Aix-en-Provence",
+    "og_description": "Création et entretien de jardins sur mesure en Provence. Devis gratuit.",
+    "og_image": "https://picsum.photos/seed/jardinhero/1200/630",
+    "version": "20260511a"
+  },
+
+  "business": {
+    "name": "Jardins du Sud",
+    "siret": "893 421 776 00018"
+  },
+
+  "branding": {
+    "logo": "https://placehold.co/220x70/2d6a4f/ffffff?text=Jardins+du+Sud&font=montserrat",
+    "favicon": "https://placehold.co/64x64/2d6a4f/ffffff?text=J",
+    "favicon_type": "image/png",
+    "theme_color": "#1b2920",
+    "fonts_url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap",
+    "fonts": {
+      "heading": "'Montserrat', 'Segoe UI', Arial, sans-serif",
+      "body": "'Inter', 'Segoe UI', Arial, sans-serif"
+    },
+    "colors": {
+      "primary":        "#2d6a4f",
+      "primary_dark":   "#1f4e38",
+      "secondary":      "#c46b2c",
+      "secondary_dark": "#9a521f",
+      "tertiary":       "#74c69d",
+      "tertiary_dark":  "#52a47a",
+      "dark":           "#1b2920"
+    }
+  },
+
+  "contact": {
+    "phone": "04 42 00 00 00",
+    "phone_link": "+33442000000",
+    "email": "contact@jardinsdusud.fr",
+    "service_area": "Aix-en-Provence et alentours"
+  },
+
+  "topbar": {
+    "tagline": "Devis gratuit & sans engagement"
+  },
+
+  "nav": {
+    "items": [
+      { "label": "Accueil",      "href": "#accueil" },
+      { "label": "Création",     "href": "#creation" },
+      { "label": "Entretien",    "href": "#entretien" },
+      { "label": "Élagage",      "href": "#elagage" },
+      { "label": "Réalisations", "href": "#realisations" },
+      { "label": "Contact",      "href": "#contact" }
+    ],
+    "cta_label": "Demander un devis"
+  },
+
+  "hero": {
+    "banner_desktop": "https://picsum.photos/seed/jardinbanner/2292/700",
+    "banner_mobile":  "https://picsum.photos/seed/jardinbanner-m/800/900",
+    "banner_alt": "Jardins du Sud - Création et entretien de jardins en Provence",
+    "title_html": "Création de jardins, <span class=\"text-blue\">entretien</span> et <span class=\"text-red\">élagage</span>",
+    "subtitle": "Paysagiste passionné en Provence, pour vos espaces verts neufs, rénovations et entretiens sur mesure.",
+    "cta_primary":   { "label": "Obtenir un devis",        "href": "#contact" },
+    "cta_secondary": { "label": "Voir nos réalisations",   "href": "#realisations" }
+  },
+
+  "specialties": {
+    "eyebrow": "Nos prestations",
+    "title":   "Nos spécialités",
+    "lead":    "Quatre savoir-faire pour transformer et entretenir vos espaces verts, avec rigueur et passion.",
+    "columns": 4,
+    "items": [
+      {
+        "accent": "green",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M12 2C8 6 6 10 6 14a6 6 0 0 0 12 0c0-4-2-8-6-12zm0 18a2 2 0 0 1-2-2h4a2 2 0 0 1-2 2z\"/></svg>",
+        "title": "Création de jardin",
+        "text":  "Conception sur mesure, plantations, massifs, allées et terrasses adaptés à votre terrain.",
+        "link":  "#creation",
+        "link_label": "En savoir plus →"
+      },
+      {
+        "accent": "blue",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M5 13c0-4 3-7 7-7s7 3 7 7H5zm0 2h14v2H5v-2zm2 4h10v2H7v-2z\"/></svg>",
+        "title": "Entretien régulier",
+        "text":  "Tonte, taille des haies, désherbage et soin des massifs au fil des saisons.",
+        "link":  "#entretien",
+        "link_label": "En savoir plus →"
+      },
+      {
+        "accent": "red",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M12 2v8m-4 4 4-4 4 4M6 18h12m-9 4h6\" stroke=\"currentColor\" stroke-width=\"2\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>",
+        "title": "Élagage",
+        "text":  "Taille douce ou de restructuration, abattage sécurisé, démontage par cordiste si besoin.",
+        "link":  "#elagage",
+        "link_label": "En savoir plus →"
+      },
+      {
+        "accent": "dark",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"28\" height=\"28\"><path fill=\"currentColor\" d=\"M12 2c-2 4-4 6-4 9a4 4 0 0 0 8 0c0-3-2-5-4-9zm-6 14h12v2H6v-2zm2 4h8v2H8v-2z\"/></svg>",
+        "title": "Arrosage automatique",
+        "text":  "Installation d'arrosage enterré, goutte-à-goutte et programmateurs économes en eau.",
+        "link":  "#entretien",
+        "link_label": "En savoir plus →"
+      }
+    ]
+  },
+
+  "showcase": {
+    "enabled": true,
+    "anchor":  "creation",
+    "accent":  "green",
+    "eyebrow": "Notre savoir-faire préféré",
+    "title":   "La création de jardin, notre cœur de métier",
+    "lead":    "Nous aimons concevoir des jardins qui vous ressemblent : harmonieux, durables et adaptés à votre climat, vos envies et votre budget.",
+    "bullets": [
+      "Étude personnalisée et plan de plantation",
+      "Sélection de végétaux adaptés au climat méditerranéen",
+      "Aménagements paysagers durables et écologiques",
+      "Suivi de chantier et reprise garantie sur les plantations"
+    ],
+    "gallery_label": "Aperçu de jardins réalisés",
+    "gallery": [
+      { "src": "https://picsum.photos/seed/jardincreate1/700/900", "alt": "Jardin contemporain avec massif fleuri et allée en pierre" },
+      { "src": "https://picsum.photos/seed/jardincreate2/600/450", "alt": "Terrasse paysagée avec graviers et plantes méditerranéennes" },
+      { "src": "https://picsum.photos/seed/jardincreate3/600/450", "alt": "Massif fleuri en bordure de pelouse" },
+      { "src": "https://picsum.photos/seed/jardincreate4/600/450", "alt": "Détail d'un parterre avec galets et lavandes" }
+    ],
+    "cta": { "label": "Découvrir nos réalisations", "href": "#realisations" }
+  },
+
+  "service_detail": {
+    "enabled": true,
+    "accent":  "green",
+    "eyebrow": "Création de jardin",
+    "title":   "Tout ce que nous savons faire",
+    "lead":    "Du simple aménagement à la création complète clé en main.",
+    "items": [
+      { "title": "Conception & plan",     "text": "Étude du terrain, plan de plantation et projet 3D pour visualiser le résultat avant travaux." },
+      { "title": "Plantations",           "text": "Arbres, arbustes, vivaces et plantes méditerranéennes choisies pour leur résistance et leur esthétique." },
+      { "title": "Massifs & bordures",    "text": "Création de massifs structurés, paillage minéral ou végétal pour limiter l'arrosage et l'entretien." },
+      { "title": "Allées & terrasses",    "text": "Pose de dallage, pavés, gravier stabilisé, bois ou composite selon vos goûts." },
+      { "title": "Engazonnement",         "text": "Préparation du sol, semis ou pose de gazon en rouleaux pour un résultat immédiat." },
+      { "title": "Rocailles & bassins",   "text": "Aménagements minéraux, fontaines et bassins pour donner du caractère à votre jardin." }
+    ]
+  },
+
+  "service_secondary": {
+    "enabled": true,
+    "anchor":  "entretien",
+    "accent":  "blue",
+    "eyebrow": "Entretien régulier",
+    "title":   "Un jardin soigné toute l'année",
+    "lead":    "Un contrat d'entretien adapté à votre jardin pour le garder beau, sain et productif au fil des saisons.",
+    "image_main":     "https://picsum.photos/seed/entretien1/900/700",
+    "image_main_alt": "Jardinier en train de tailler une haie",
+    "image_sub":      "https://picsum.photos/seed/entretien2/600/450",
+    "image_sub_alt":  "Tondeuse sur pelouse fraîchement entretenue",
+    "features": [
+      { "title": "Tonte & gazon",            "text": "Tonte régulière, scarification, regarnissage et fertilisation." },
+      { "title": "Taille des haies",         "text": "Taille en hauteur ou structurée, 1 à 3 passages par an selon l'espèce." },
+      { "title": "Désherbage écologique",    "text": "Désherbage manuel, paillage et solutions sans produit chimique." },
+      { "title": "Contrat annuel",           "text": "Forfait sur mesure de 4 à 12 passages, payable au mois ou au trimestre." }
+    ],
+    "cta": { "label": "Demander un devis entretien", "href": "#contact" }
+  },
+
+  "service_tertiary": {
+    "enabled": true,
+    "anchor":  "elagage",
+    "accent":  "red",
+    "eyebrow": "Élagage & abattage",
+    "title":   "De la taille douce au démontage technique, en sécurité",
+    "lead":    "Que ce soit pour préserver la santé de vos arbres ou supprimer un sujet dangereux, nous intervenons avec le matériel adapté et toutes les assurances.",
+    "checks": [
+      "Taille douce et de formation",
+      "Élagage de restructuration",
+      "Abattage simple ou par démontage",
+      "Démontage en rétention par cordiste",
+      "Rognage de souche et évacuation",
+      "Diagnostic phytosanitaire"
+    ],
+    "note_html": "<strong>Copropriété ou collectivité ?</strong> Nous intervenons aussi sur des projets d'envergure avec PPSPS, suivi de chantier et travail en équipe.",
+    "cta":   { "label": "Discuter de votre projet", "href": "#contact" },
+    "image": "https://picsum.photos/seed/elagage1/900/700",
+    "image_alt": "Élagueur en hauteur dans un arbre, équipé de cordes"
+  },
+
+  "method": {
+    "enabled": true,
+    "eyebrow": "Notre méthode",
+    "title":   "De la première visite à la livraison",
+    "lead":    "Une approche simple et transparente, à chaque étape de votre projet.",
+    "steps": [
+      { "num": 1, "title": "Visite & écoute",       "text": "Rendez-vous sur place pour comprendre votre terrain, vos envies et votre budget." },
+      { "num": 2, "title": "Proposition & devis",   "text": "Plan de projet, choix des végétaux et devis clair, détaillé et gratuit." },
+      { "num": 3, "title": "Réalisation du chantier","text": "Travaux soignés, dans le respect du calendrier de plantation et des saisons." },
+      { "num": 4, "title": "Garantie & suivi",      "text": "Reprise des plantations garantie 1 an et conseils d'entretien personnalisés." }
+    ]
+  },
+
+  "why": {
+    "enabled": true,
+    "eyebrow": "Pourquoi nous choisir",
+    "title":   "Pourquoi choisir Jardins du Sud ?",
+    "columns": 4,
+    "items": [
+      {
+        "accent": "green",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"m9 16.2-3.5-3.6L4 14l5 5 11-11-1.4-1.4z\"/></svg>",
+        "title": "Travail soigné",
+        "text":  "Des finitions propres et un chantier respecté du début à la fin."
+      },
+      {
+        "accent": "blue",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"M12 2 4 6v6c0 5 3.5 9.5 8 10 4.5-.5 8-5 8-10V6l-8-4z\"/></svg>",
+        "title": "Végétaux de qualité",
+        "text":  "Pépiniéristes locaux, plantes adaptées au climat provençal."
+      },
+      {
+        "accent": "red",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"M13 2 3 14h7l-1 8 10-12h-7l1-8z\"/></svg>",
+        "title": "Approche écologique",
+        "text":  "Zéro phyto, paillage, plantes économes en eau."
+      },
+      {
+        "accent": "dark",
+        "icon_svg": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path fill=\"currentColor\" d=\"M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z\"/></svg>",
+        "title": "Devis gratuit",
+        "text":  "Un devis clair, détaillé et sans engagement."
+      }
+    ]
+  },
+
+  "gallery": {
+    "enabled": true,
+    "anchor":  "realisations",
+    "eyebrow": "Réalisations",
+    "title":   "Quelques réalisations",
+    "lead":    "Un aperçu de nos chantiers récents en création et entretien de jardins.",
+    "filters": [
+      { "slug": "all",       "label": "Tout",       "active": true,  "aria_selected": "true"  },
+      { "slug": "creation",  "label": "Création",   "active": false, "aria_selected": "false" },
+      { "slug": "entretien", "label": "Entretien",  "active": false, "aria_selected": "false" }
+    ],
+    "items": [
+      { "cat": "creation",  "src": "https://picsum.photos/seed/gal1/600/750",  "alt": "Jardin méditerranéen avec lavandes et oliviers", "caption": "Jardin méditerranéen" },
+      { "cat": "creation",  "src": "https://picsum.photos/seed/gal2/600/750",  "alt": "Terrasse paysagée avec dallage en pierre",        "caption": "Terrasse paysagée" },
+      { "cat": "creation",  "src": "https://picsum.photos/seed/gal3/600/750",  "alt": "Massif fleuri en cascade",                        "caption": "Massif fleuri" },
+      { "cat": "creation",  "src": "https://picsum.photos/seed/gal4/600/750",  "alt": "Allée en pas japonais entre plantes",             "caption": "Allée en pas japonais" },
+      { "cat": "creation",  "src": "https://picsum.photos/seed/gal5/600/750",  "alt": "Rocaille avec plantes grasses",                   "caption": "Rocaille provençale" },
+      { "cat": "creation",  "src": "https://picsum.photos/seed/gal6/600/750",  "alt": "Bassin paysager avec nénuphars",                  "caption": "Bassin paysager" },
+      { "cat": "entretien", "src": "https://picsum.photos/seed/gal7/600/750",  "alt": "Haie taillée au cordeau",                         "caption": "Haie taillée" },
+      { "cat": "entretien", "src": "https://picsum.photos/seed/gal8/600/750",  "alt": "Pelouse fraîchement tondue",                      "caption": "Pelouse soignée" }
+    ]
+  },
+
+  "reviews": {
+    "enabled": true,
+    "eyebrow": "Avis clients",
+    "title":   "Ils nous ont fait confiance",
+    "lead":    "Quelques retours de nos clients particuliers et copropriétés.",
+    "items": [
+      {
+        "stars": 5,
+        "stars_html": "★★★★★",
+        "text":   "« Création complète de notre jardin : le résultat dépasse nos attentes. Conseils précieux et plantations magnifiques. »",
+        "author": "Marie L., Aix-en-Provence"
+      },
+      {
+        "stars": 5,
+        "stars_html": "★★★★★",
+        "text":   "« Contrat d'entretien depuis 2 ans, toujours ponctuels et soigneux. Notre jardin n'a jamais été aussi beau. »",
+        "author": "Pierre G., Le Tholonet"
+      },
+      {
+        "stars": 5,
+        "stars_html": "★★★★★",
+        "text":   "« Élagage de nos grands platanes en toute sécurité. Équipe professionnelle, devis clair et chantier propre. »",
+        "author": "Copropriété Les Pins"
+      }
+    ]
+  },
+
+  "contact_section": {
+    "eyebrow": "Contact",
+    "title":   "Un projet ? Parlons-en !",
+    "lead":    "Remplissez le formulaire, nous vous rappelons rapidement pour échanger sur votre projet.",
+    "note":    "Devis gratuit · Réponse rapide · Sans engagement"
+  },
+
+  "contact_form": {
+    "action":  "https://formspree.io/f/VOTRE_ID_FORMSPREE",
+    "subject": "Nouvelle demande de devis - Jardins du Sud",
+    "title":   "Demander un devis",
+    "project_types": [
+      { "value": "creation",      "label": "Création de jardin" },
+      { "value": "entretien",     "label": "Entretien"          },
+      { "value": "elagage",       "label": "Élagage"            },
+      { "value": "arrosage",      "label": "Arrosage automatique"},
+      { "value": "autre",         "label": "Autre"              }
+    ],
+    "submit_label": "Être rappelé",
+    "legal":  "En soumettant ce formulaire, vous acceptez d'être recontacté concernant votre demande."
+  },
+
+  "footer": {
+    "tagline":  "Un jardin qui vous ressemble, à chaque saison.",
+    "services": [
+      "Création de jardin",
+      "Entretien régulier",
+      "Élagage & abattage",
+      "Arrosage automatique",
+      "Engazonnement"
+    ],
+    "signature": {
+      "enabled": false
+    },
+    "legal_links": [
+      { "label": "Mentions légales",            "href": "#" },
+      { "label": "Politique de confidentialité","href": "#" }
+    ]
+  }
+}

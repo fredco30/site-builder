@@ -1,0 +1,36 @@
+# Node
+node_modules/
+npm-debug.log*
+.npm
+
+# Variables d'environnement (secrets)
+.env
+admin/.env
+*.local.env
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# Éditeurs
+.vscode/
+.idea/
+
+# Sites buildés — pas besoin de versionner (régénérables via build.js)
+dist/
+
+# Archives temporaires
+*.bak
+*.tmp
+*.zip
+*.tar.gz
+
+# Sessions admin
+admin/sessions/
+
+# Vidéos sources lourdes (gardées hors-git)
+*.mp4
+!videos/pitch-geoclic-suite.mp4

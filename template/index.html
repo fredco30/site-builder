@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="{{meta.lang}}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>{{meta.title}}</title>
+  <meta name="description" content="{{meta.description}}" />
+  <meta name="theme-color" content="{{branding.theme_color}}" />
+  <meta name="author" content="{{business.name}}" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{{meta.og_title}}" />
+  <meta property="og:description" content="{{meta.og_description}}" />
+  <meta property="og:image" content="{{meta.og_image}}" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="{{branding.favicon_type}}" href="{{branding.favicon}}" />
+
+  <!-- Polices Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="{{branding.fonts_url}}" rel="stylesheet" />
+
+  <!-- Feuille de styles -->
+  <link rel="stylesheet" href="styles.css?v={{meta.version}}" />
+</head>
+
+<body>
+
+  <!-- BANDEAU UTILITAIRE -->
+  <div class="topbar" aria-label="Informations de contact rapide">
+    <div class="container topbar__inner">
+      <span class="topbar__item">
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.3 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A18 18 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+        {{contact.phone}}
+      </span>
+      <span class="topbar__item topbar__item--hide-sm">
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm8 7L4 6v2l8 5 8-5V6l-8 5z"/></svg>
+        {{contact.email}}
+      </span>
+      <span class="topbar__item topbar__item--right">
+        <span class="dot"></span> {{topbar.tagline}}
+      </span>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header" id="site-header">
+    <div class="container header__inner">
+      <a href="#accueil" class="header__logo" aria-label="{{business.name}} - retour à l'accueil">
+        <img src="{{branding.logo}}" alt="Logo {{business.name}}" />
+      </a>
+
+      <button class="header__burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mainNav">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="mainNav" aria-label="Navigation principale">
+        <ul class="nav__list">
+          {{#each nav.items}}
+          <li><a href="{{href}}">{{label}}</a></li>
+          {{/each}}
+        </ul>
+        <a href="#contact" class="btn btn--primary btn--sm nav__cta">{{nav.cta_label}}</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero" id="accueil" aria-labelledby="hero-title">
+      <div class="hero__banner">
+        <picture>
+          {{#if hero.banner_mobile}}
+          <source media="(max-width: 700px)" srcset="{{hero.banner_mobile}}" />
+          {{/if}}
+          <img src="{{hero.banner_desktop}}" alt="{{hero.banner_alt}}" />
+        </picture>
+      </div>
+
+      <div class="container hero__cta-zone">
+        <h1 id="hero-title" class="hero__title">{{{hero.title_html}}}</h1>
+        <p class="hero__subtitle">{{hero.subtitle}}</p>
+
+        <div class="hero__buttons">
+          <a href="{{hero.cta_secondary.href}}" class="btn btn--dark">{{hero.cta_secondary.label}}</a>
+          <a href="{{hero.cta_primary.href}}" class="btn btn--primary">{{hero.cta_primary.label}}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPÉCIALITÉS (cartes) -->
+    <section class="specialties section" aria-labelledby="specialties-title">
+      <div class="container">
+        <header class="section__header">
+          <span class="section__eyebrow">{{specialties.eyebrow}}</span>
+          <h2 id="specialties-title" class="section__title">{{specialties.title}}</h2>
+          <p class="section__lead">{{specialties.lead}}</p>
+        </header>
+
+        <div class="cards cards--{{specialties.columns}}">
+          {{#each specialties.items}}
+          <article class="card card--accent-{{accent}}">
+            <div class="card__icon" aria-hidden="true">{{{icon_svg}}}</div>
+            <h3 class="card__title">{{title}}</h3>
+            <p class="card__text">{{text}}</p>
+            {{#if link}}<a href="{{link}}" class="card__link">{{link_label}}</a>{{/if}}
+          </article>
+          {{/each}}
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOWCASE (savoir-faire principal + galerie courte) -->
+    {{#if showcase.enabled}}
+    <section class="showcase section" id="{{showcase.anchor}}" aria-labelledby="showcase-title">
+      <div class="container showcase__grid">
+        <div class="showcase__content">
+          <span class="section__eyebrow text-{{showcase.accent}}">{{showcase.eyebrow}}</span>
+          <h2 id="showcase-title" class="section__title">{{showcase.title}}</h2>
+          <p class="section__lead">{{showcase.lead}}</p>
+          <ul class="bullets">
+            {{#each showcase.bullets}}
+            <li>{{this}}</li>
+            {{/each}}
+          </ul>
+          <a href="{{showcase.cta.href}}" class="btn btn--{{showcase.accent}}">{{showcase.cta.label}}</a>
+        </div>
+
+        <div class="showcase__gallery" aria-label="{{showcase.gallery_label}}">
+          {{#each showcase.gallery}}
+          <img src="{{src}}" alt="{{alt}}" />
+          {{/each}}
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- SERVICE DÉTAIL : mini-cards -->
+    {{#if service_detail.enabled}}
+    <section class="services-detail section section--alt" aria-labelledby="reno-title">
+      <div class="container">
+        <header class="section__header">
+          <span class="section__eyebrow text-{{service_detail.accent}}">{{service_detail.eyebrow}}</span>
+          <h2 id="reno-title" class="section__title">{{service_detail.title}}</h2>
+          <p class="section__lead">{{service_detail.lead}}</p>
+        </header>
+
+        <div class="cards cards--3">
+          {{#each service_detail.items}}
+          <article class="mini-card">
+            <h3>{{title}}</h3>
+            <p>{{text}}</p>
+          </article>
+          {{/each}}
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- SERVICE SECONDAIRE (style "climatisation") -->
+    {{#if service_secondary.enabled}}
+    <section class="climate section" id="{{service_secondary.anchor}}" aria-labelledby="clim-title">
+      <div class="container climate__grid">
+        <div class="climate__media">
+          <img src="{{service_secondary.image_main}}" alt="{{service_secondary.image_main_alt}}" />
+          {{#if service_secondary.image_sub}}
+          <div class="climate__media-sub">
+            <img src="{{service_secondary.image_sub}}" alt="{{service_secondary.image_sub_alt}}" />
+          </div>
+          {{/if}}
+        </div>
+        <div class="climate__content">
+          <span class="section__eyebrow text-{{service_secondary.accent}}">{{service_secondary.eyebrow}}</span>
+          <h2 id="clim-title" class="section__title">{{service_secondary.title}}</h2>
+          <p class="section__lead">{{service_secondary.lead}}</p>
+
+          <ul class="features-list">
+            {{#each service_secondary.features}}
+            <li><strong>{{title}}</strong><span>{{text}}</span></li>
+            {{/each}}
+          </ul>
+
+          <a href="{{service_secondary.cta.href}}" class="btn btn--{{service_secondary.accent}}">{{service_secondary.cta.label}}</a>
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- SERVICE TERTIAIRE (style "chauffage") -->
+    {{#if service_tertiary.enabled}}
+    <section class="heating section section--alt" id="{{service_tertiary.anchor}}" aria-labelledby="heat-title">
+      <div class="container heating__grid">
+        <div class="heating__content">
+          <span class="section__eyebrow text-{{service_tertiary.accent}}">{{service_tertiary.eyebrow}}</span>
+          <h2 id="heat-title" class="section__title">{{service_tertiary.title}}</h2>
+          <p class="section__lead">{{service_tertiary.lead}}</p>
+
+          <div class="checks">
+            {{#each service_tertiary.checks}}
+            <div class="check"><span class="check__bullet"></span>{{this}}</div>
+            {{/each}}
+          </div>
+
+          {{#if service_tertiary.note_html}}
+          <p class="heating__note">{{{service_tertiary.note_html}}}</p>
+          {{/if}}
+
+          <a href="{{service_tertiary.cta.href}}" class="btn btn--primary">{{service_tertiary.cta.label}}</a>
+        </div>
+
+        <div class="heating__media">
+          <img src="{{service_tertiary.image}}" alt="{{service_tertiary.image_alt}}" />
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- MÉTHODE (timeline) -->
+    {{#if method.enabled}}
+    <section class="method section" aria-labelledby="method-title">
+      <div class="container">
+        <header class="section__header">
+          <span class="section__eyebrow">{{method.eyebrow}}</span>
+          <h2 id="method-title" class="section__title">{{method.title}}</h2>
+          <p class="section__lead">{{method.lead}}</p>
+        </header>
+
+        <ol class="timeline">
+          {{#each method.steps}}
+          <li class="timeline__step">
+            <div class="timeline__num">{{num}}</div>
+            <h3>{{title}}</h3>
+            <p>{{text}}</p>
+          </li>
+          {{/each}}
+        </ol>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- POURQUOI NOUS CHOISIR -->
+    {{#if why.enabled}}
+    <section class="why section section--alt" aria-labelledby="why-title">
+      <div class="container">
+        <header class="section__header">
+          <span class="section__eyebrow">{{why.eyebrow}}</span>
+          <h2 id="why-title" class="section__title">{{why.title}}</h2>
+        </header>
+
+        <div class="cards cards--{{why.columns}}">
+          {{#each why.items}}
+          <article class="card card--minimal">
+            <div class="card__icon card__icon--{{accent}}" aria-hidden="true">{{{icon_svg}}}</div>
+            <h3 class="card__title">{{title}}</h3>
+            <p class="card__text">{{text}}</p>
+          </article>
+          {{/each}}
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- GALERIE RÉALISATIONS -->
+    {{#if gallery.enabled}}
+    <section class="gallery section" id="{{gallery.anchor}}" aria-labelledby="gallery-title">
+      <div class="container">
+        <header class="section__header">
+          <span class="section__eyebrow">{{gallery.eyebrow}}</span>
+          <h2 id="gallery-title" class="section__title">{{gallery.title}}</h2>
+          <p class="section__lead">{{gallery.lead}}</p>
+        </header>
+
+        {{#if gallery.filters}}
+        <div class="gallery__filters" role="tablist" aria-label="Filtres de la galerie">
+          {{#each gallery.filters}}
+          <button class="filter{{#if active}} is-active{{/if}}" data-filter="{{slug}}" role="tab" aria-selected="{{aria_selected}}">{{label}}</button>
+          {{/each}}
+        </div>
+        {{/if}}
+
+        <div class="gallery__grid">
+          {{#each gallery.items}}
+          <figure class="tile" data-cat="{{cat}}">
+            <img src="{{src}}" alt="{{alt}}" loading="lazy" />
+            <figcaption>{{caption}}</figcaption>
+          </figure>
+          {{/each}}
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- AVIS CLIENTS -->
+    {{#if reviews.enabled}}
+    <section class="reviews section section--alt" aria-labelledby="reviews-title">
+      <div class="container">
+        <header class="section__header">
+          <span class="section__eyebrow">{{reviews.eyebrow}}</span>
+          <h2 id="reviews-title" class="section__title">{{reviews.title}}</h2>
+          <p class="section__lead">{{reviews.lead}}</p>
+        </header>
+
+        <div class="cards cards--3">
+          {{#each reviews.items}}
+          <article class="review">
+            <div class="review__stars" aria-label="{{stars}} étoiles sur 5">{{{stars_html}}}</div>
+            <p class="review__text">{{text}}</p>
+            <footer class="review__author">— {{author}}</footer>
+          </article>
+          {{/each}}
+        </div>
+      </div>
+    </section>
+    {{/if}}
+
+    <!-- CONTACT / DEVIS -->
+    <section class="contact section" id="contact" aria-labelledby="contact-title">
+      <div class="container contact__grid">
+        <div class="contact__intro">
+          <span class="section__eyebrow text-light">{{contact_section.eyebrow}}</span>
+          <h2 id="contact-title" class="section__title section__title--light">{{contact_section.title}}</h2>
+          <p class="section__lead section__lead--light">{{contact_section.lead}}</p>
+
+          <ul class="contact__info">
+            <li>
+              <span class="contact__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.3 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A18 18 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+              </span>
+              <a href="tel:{{contact.phone_link}}">{{contact.phone}}</a>
+            </li>
+            <li>
+              <span class="contact__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zm8 7L4 6v2l8 5 8-5V6l-8 5z"/></svg>
+              </span>
+              <a href="mailto:{{contact.email}}">{{contact.email}}</a>
+            </li>
+            <li>
+              <span class="contact__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+              </span>
+              {{contact.service_area}}
+            </li>
+          </ul>
+
+          <p class="contact__note">{{contact_section.note}}</p>
+        </div>
+
+        <form class="form" action="{{contact_form.action}}" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="{{contact_form.subject}}" />
+          <input type="hidden" name="_replyto" value="" id="replyto-hidden" />
+          <h3 class="form__title">{{contact_form.title}}</h3>
+
+          <div class="form__row">
+            <label for="f-nom">Nom *</label>
+            <input id="f-nom" name="nom" type="text" required autocomplete="name" />
+          </div>
+
+          <div class="form__row">
+            <label for="f-tel">Téléphone *</label>
+            <input id="f-tel" name="telephone" type="tel" required autocomplete="tel" />
+          </div>
+
+          <div class="form__row">
+            <label for="f-mail">Email</label>
+            <input id="f-mail" name="email" type="email" autocomplete="email" />
+          </div>
+
+          <div class="form__row">
+            <label for="f-projet">Type de projet *</label>
+            <select id="f-projet" name="projet" required>
+              <option value="">— Sélectionnez —</option>
+              {{#each contact_form.project_types}}
+              <option value="{{value}}">{{label}}</option>
+              {{/each}}
+            </select>
+          </div>
+
+          <div class="form__row">
+            <label for="f-msg">Message</label>
+            <textarea id="f-msg" name="message" rows="4" placeholder="Décrivez votre projet en quelques mots…"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--block">{{contact_form.submit_label}}</button>
+
+          <p class="form__feedback" id="formFeedback" role="status" aria-live="polite"></p>
+
+          <p class="form__legal">{{contact_form.legal}}</p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer__grid">
+      <div class="footer__brand">
+        <div class="footer__logo-wrap">
+          <img src="{{branding.logo}}" alt="{{business.name}}" class="footer__logo" />
+        </div>
+        <p class="footer__tagline">{{footer.tagline}}</p>
+      </div>
+
+      <nav class="footer__col" aria-label="Liens rapides">
+        <h4>Navigation</h4>
+        <ul>
+          {{#each nav.items}}
+          <li><a href="{{href}}">{{label}}</a></li>
+          {{/each}}
+        </ul>
+      </nav>
+
+      <nav class="footer__col" aria-label="Services">
+        <h4>Services</h4>
+        <ul>
+          {{#each footer.services}}
+          <li>{{this}}</li>
+          {{/each}}
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="tel:{{contact.phone_link}}">{{contact.phone}}</a></li>
+          <li><a href="mailto:{{contact.email}}">{{contact.email}}</a></li>
+          {{#if business.siret}}<li>SIRET : {{business.siret}}</li>{{/if}}
+        </ul>
+      </div>
+    </div>
+
+    {{#if footer.signature.enabled}}
+    <div class="container footer__signature-wrap">
+      <a class="footer__signature"
+         href="{{footer.signature.url}}"
+         target="_blank"
+         rel="noopener noreferrer"
+         aria-label="{{footer.signature.aria}}">
+        <picture>
+          {{#if footer.signature.image_mobile}}
+          <source media="(max-width: 700px)" srcset="{{footer.signature.image_mobile}}" />
+          {{/if}}
+          <img src="{{footer.signature.image_desktop}}" alt="{{footer.signature.alt}}" />
+        </picture>
+      </a>
+    </div>
+    {{/if}}
+
+    <div class="footer__bottom">
+      <div class="container footer__bottom-inner">
+        <p>© <span id="year"></span> {{business.name}} — Tous droits réservés.</p>
+        <ul>
+          {{#each footer.legal_links}}
+          <li><a href="{{href}}">{{label}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bouton appel flottant (mobile) -->
+  <a href="tel:{{contact.phone_link}}" class="floating-call" aria-label="Appeler {{business.name}}">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.3 1.1.4 2.4.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A18 18 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.3 1l-2.2 2.2z"/></svg>
+  </a>
+
+  <script src="script.js?v={{meta.version}}" defer></script>
+</body>
+</html>

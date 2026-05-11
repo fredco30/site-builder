@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestia Admin — Édition</title>
+  <link rel="stylesheet" href="/admin/static/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar__brand">
+      <a href="/admin/dashboard" style="color:#fff;text-decoration:none;">← Dashboard</a>
+      <span id="brand-name" style="opacity:.7;">…</span>
+    </div>
+    <div class="topbar__right">
+      <button class="btn-sm" id="logout-btn">Déconnexion</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-title">
+      <h1 id="page-h1">Édition du client</h1>
+      <div class="actions">
+        <button class="btn-outline" id="preview-btn" title="Ouvrir le site buildé">Aperçu</button>
+        <button class="btn-success" id="publish-btn">Sauvegarder &amp; publier</button>
+      </div>
+    </div>
+
+    <div class="editor-layout">
+      <aside class="editor-nav" id="editor-nav">
+        <h3>Sections</h3>
+        <ul id="nav-list"></ul>
+      </aside>
+
+      <section class="editor-content" id="editor-content">
+        <div class="empty-state"><div class="icon">⏳</div>Chargement…</div>
+      </section>
+    </div>
+  </main>
+
+  <div class="save-bar" id="save-bar" style="display:none;">
+    <span class="status" id="save-status">Modifié</span>
+    <button class="btn-success btn-sm" id="save-bar-publish">Publier</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ===========================================================
+       Editor.js — formulaires dynamiques à partir du config.json
+       =========================================================== */
+
+    const params = new URLSearchParams(location.search);
+    const SLUG = params.get('slug');
+    let config = null;
+    let dirty = false;
+
+    /* ---------- Helpers ---------- */
+    function escapeHtml(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+    }
+    function toast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + (type || '');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+    function setDirty(v) {
+      dirty = v;
+      const bar = document.getElementById('save-bar');
+      const status = document.getElementById('save-status');
+      if (v) {
+        bar.style.display = 'flex';
+        status.textContent = 'Modifications non publiées';
+        status.className = 'status is-dirty';
+      } else {
+        bar.style.display = 'none';
+      }
+    }
+    window.addEventListener('beforeunload', e => {
+      if (dirty) { e.preventDefault(); e.returnValue = ''; }
+    });
+
+    /* ---------- Définition des sections éditables ---------- */
+    // Chaque section décrit quels champs du config.json sont éditables et comment.
+    const SECTIONS = [
+      {
+        id: 'business', title: 'Identité & contact', icon: '🏢',
+        fields: [
+          { key: 'business.name',          label: 'Nom commercial',         type: 'text', required: true },
+          { key: 'business.siret',         label: 'SIRET',                  type: 'text' },
+          { key: 'footer.tagline',         label: 'Slogan (affiché en footer)', type: 'text' },
+          { key: 'topbar.tagline',         label: 'Bandeau haut de page',   type: 'text' },
+          { key: 'contact.phone',          label: 'Téléphone (affiché)',    type: 'text' },
+          { key: 'contact.phone_link',     label: 'Téléphone (format international, ex. +33615690871)', type: 'text' },
+          { key: 'contact.email',          label: 'Email',                  type: 'email' },
+          { key: 'contact.service_area',   label: 'Zone d\'intervention',   type: 'text' },
+        ]
+      },
+      {
+        id: 'meta', title: 'SEO & métadonnées', icon: '🔍',
+        fields: [
+          { key: 'meta.title',         label: 'Titre de la page (onglet du navigateur)', type: 'text' },
+          { key: 'meta.description',   label: 'Meta description',                         type: 'textarea' },
+          { key: 'meta.og_title',      label: 'Titre Open Graph (partage social)',        type: 'text' },
+          { key: 'meta.og_description',label: 'Description Open Graph',                   type: 'textarea' },
+        ]
+      },
+      {
+        id: 'branding', title: 'Logo & couleurs', icon: '🎨',
+        fields: [
+          { key: 'branding.logo',                  label: 'Logo (chemin)',          type: 'image', folder: 'logo' },
+          { key: 'branding.colors.primary',        label: 'Couleur primaire (CTA)', type: 'color' },
+          { key: 'branding.colors.primary_dark',   label: 'Primaire foncée',        type: 'color' },
+          { key: 'branding.colors.secondary',      label: 'Couleur secondaire',     type: 'color' },
+          { key: 'branding.colors.secondary_dark', label: 'Secondaire foncée',      type: 'color' },
+          { key: 'branding.colors.tertiary',       label: 'Couleur tertiaire',      type: 'color' },
+          { key: 'branding.colors.tertiary_dark',  label: 'Tertiaire foncée',       type: 'color' },
+          { key: 'branding.colors.dark',           label: 'Couleur sombre (titres)',type: 'color' },
+        ]
+      },
+      {
+        id: 'hero', title: 'Hero (bandeau d\'accueil)', icon: '🖼️',
+        fields: [
+          { key: 'hero.banner_desktop', label: 'Bannière desktop', type: 'image', folder: 'images' },
+          { key: 'hero.banner_mobile',  label: 'Bannière mobile',  type: 'image', folder: 'images' },
+          { key: 'hero.banner_alt',     label: 'Texte alternatif (accessibilité)', type: 'text' },
+          { key: 'hero.title_html',     label: 'Titre H1 (HTML autorisé)',  type: 'textarea' },
+          { key: 'hero.subtitle',       label: 'Sous-titre',                type: 'textarea' },
+          { key: 'hero.cta_primary.label', label: 'CTA principal — libellé', type: 'text' },
+          { key: 'hero.cta_primary.href',  label: 'CTA principal — lien',    type: 'text' },
+          { key: 'hero.cta_secondary.label', label: 'CTA secondaire — libellé', type: 'text' },
+          { key: 'hero.cta_secondary.href',  label: 'CTA secondaire — lien',    type: 'text' },
+        ]
+      },
+      {
+        id: 'specialties', title: 'Prestations principales (cartes)', icon: '⭐',
+        fields: [
+          { key: 'specialties.eyebrow', label: 'Surtitre',  type: 'text' },
+          { key: 'specialties.title',   label: 'Titre',     type: 'text' },
+          { key: 'specialties.lead',    label: 'Accroche',  type: 'textarea' },
+          { key: 'specialties.items',   label: 'Liste des prestations', type: 'list',
+            itemFields: [
+              { key: 'title',  label: 'Titre',       type: 'text' },
+              { key: 'text',   label: 'Description', type: 'textarea' },
+              { key: 'accent', label: 'Couleur d\'accent', type: 'select', options: ['green','blue','red','dark'] },
+              { key: 'link',         label: 'Lien (ex. #ancre)', type: 'text' },
+              { key: 'link_label',   label: 'Libellé du lien', type: 'text' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'showcase', title: 'Savoir-faire principal + galerie courte', icon: '🛁',
+        toggle: 'showcase.enabled',
+        fields: [
+          { key: 'showcase.eyebrow', label: 'Surtitre',  type: 'text' },
+          { key: 'showcase.title',   label: 'Titre',     type: 'text' },
+          { key: 'showcase.lead',    label: 'Accroche',  type: 'textarea' },
+          { key: 'showcase.bullets', label: 'Points forts', type: 'list-simple' },
+          { key: 'showcase.gallery', label: 'Galerie courte (3-4 images)', type: 'list',
+            itemFields: [
+              { key: 'src', label: 'Image', type: 'image', folder: 'images' },
+              { key: 'alt', label: 'Texte alternatif', type: 'text' },
+            ]
+          },
+          { key: 'showcase.cta.label', label: 'CTA — libellé', type: 'text' },
+          { key: 'showcase.cta.href',  label: 'CTA — lien',    type: 'text' },
+        ]
+      },
+      {
+        id: 'service_detail', title: 'Mini-cartes de prestations détaillées', icon: '📋',
+        toggle: 'service_detail.enabled',
+        fields: [
+          { key: 'service_detail.eyebrow', label: 'Surtitre',  type: 'text' },
+          { key: 'service_detail.title',   label: 'Titre',     type: 'text' },
+          { key: 'service_detail.lead',    label: 'Accroche',  type: 'textarea' },
+          { key: 'service_detail.items',   label: 'Mini-cartes', type: 'list',
+            itemFields: [
+              { key: 'title', label: 'Titre',       type: 'text' },
+              { key: 'text',  label: 'Description', type: 'textarea' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'method', title: 'Méthode (4 étapes)', icon: '🛠️',
+        toggle: 'method.enabled',
+        fields: [
+          { key: 'method.eyebrow', label: 'Surtitre',  type: 'text' },
+          { key: 'method.title',   label: 'Titre',     type: 'text' },
+          { key: 'method.lead',    label: 'Accroche',  type: 'textarea' },
+          { key: 'method.steps',   label: 'Étapes',   type: 'list',
+            itemFields: [
+              { key: 'num',   label: 'Numéro', type: 'text' },
+              { key: 'title', label: 'Titre',  type: 'text' },
+              { key: 'text',  label: 'Description', type: 'textarea' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'gallery', title: 'Galerie des réalisations', icon: '📸',
+        toggle: 'gallery.enabled',
+        fields: [
+          { key: 'gallery.eyebrow', label: 'Surtitre',  type: 'text' },
+          { key: 'gallery.title',   label: 'Titre',     type: 'text' },
+          { key: 'gallery.lead',    label: 'Accroche',  type: 'textarea' },
+          { key: 'gallery.items',   label: 'Images de la galerie', type: 'list',
+            itemFields: [
+              { key: 'src',     label: 'Image',     type: 'image', folder: 'images' },
+              { key: 'alt',     label: 'Alt',       type: 'text' },
+              { key: 'caption', label: 'Légende',   type: 'text' },
+              { key: 'cat',     label: 'Catégorie (slug du filtre)', type: 'text' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'reviews', title: 'Avis clients', icon: '⭐',
+        toggle: 'reviews.enabled',
+        fields: [
+          { key: 'reviews.eyebrow', label: 'Surtitre',  type: 'text' },
+          { key: 'reviews.title',   label: 'Titre',     type: 'text' },
+          { key: 'reviews.lead',    label: 'Accroche',  type: 'textarea' },
+          { key: 'reviews.items',   label: 'Témoignages', type: 'list',
+            itemFields: [
+              { key: 'stars',      label: 'Étoiles (1-5)', type: 'text' },
+              { key: 'stars_html', label: 'Étoiles (HTML : ★★★★★)', type: 'text' },
+              { key: 'text',       label: 'Texte du témoignage', type: 'textarea' },
+              { key: 'author',     label: 'Auteur', type: 'text' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'contact_form', title: 'Formulaire de contact', icon: '✉️',
+        fields: [
+          { key: 'contact_section.eyebrow', label: 'Surtitre',  type: 'text' },
+          { key: 'contact_section.title',   label: 'Titre',     type: 'text' },
+          { key: 'contact_section.lead',    label: 'Accroche',  type: 'textarea' },
+          { key: 'contact_section.note',    label: 'Note',      type: 'text' },
+          { key: 'contact_form.action',     label: 'URL Formspree (action du formulaire)', type: 'text' },
+          { key: 'contact_form.subject',    label: 'Sujet email', type: 'text' },
+          { key: 'contact_form.title',      label: 'Titre du formulaire',    type: 'text' },
+          { key: 'contact_form.submit_label', label: 'Libellé du bouton',   type: 'text' },
+          { key: 'contact_form.legal',      label: 'Mention légale du formulaire', type: 'textarea' },
+          { key: 'contact_form.project_types', label: 'Types de projets (options du select)', type: 'list',
+            itemFields: [
+              { key: 'value', label: 'Valeur (slug)', type: 'text' },
+              { key: 'label', label: 'Libellé affiché', type: 'text' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'footer', title: 'Pied de page', icon: '🦶',
+        fields: [
+          { key: 'footer.services', label: 'Liste services (pied de page)', type: 'list-simple' },
+        ]
+      },
+    ];
+
+    /* ---------- Accès profond aux propriétés ---------- */
+    function getDeep(obj, path) {
+      return path.split('.').reduce((acc, k) => (acc == null ? acc : acc[k]), obj);
+    }
+    function setDeep(obj, path, value) {
+      const parts = path.split('.');
+      const last = parts.pop();
+      const parent = parts.reduce((acc, k) => {
+        if (acc[k] == null || typeof acc[k] !== 'object') acc[k] = {};
+        return acc[k];
+      }, obj);
+      parent[last] = value;
+    }
+
+    /* ---------- Chargement initial ---------- */
+    async function load() {
+      if (!SLUG) { location.href = '/admin/dashboard'; return; }
+      try {
+        const r = await fetch('/admin/api/clients/' + encodeURIComponent(SLUG));
+        if (r.status === 401) { location.href = '/admin/login'; return; }
+        if (!r.ok) throw new Error('Client introuvable');
+        const j = await r.json();
+        config = j.config;
+        renderEditor();
+      } catch (e) {
+        document.getElementById('editor-content').innerHTML =
+          '<div class="empty-state"><div class="icon">⚠️</div>' + escapeHtml(e.message) + '</div>';
+      }
+    }
+
+    function renderEditor() {
+      const name = (config.business && config.business.name) || SLUG;
+      document.title = 'Gestia — ' + name;
+      document.getElementById('brand-name').textContent = '· ' + name;
+      document.getElementById('page-h1').textContent = name;
+
+      // Navigation latérale
+      const navList = document.getElementById('nav-list');
+      navList.innerHTML = SECTIONS.map(s =>
+        `<li><a href="#section-${s.id}">${s.icon || '·'} ${escapeHtml(s.title)}</a></li>`
+      ).join('');
+
+      // Contenu : chaque section
+      const content = document.getElementById('editor-content');
+      content.innerHTML = SECTIONS.map(renderSection).join('');
+
+      // Bind tous les inputs après rendu
+      bindAllInputs();
+    }
+
+    function renderSection(section) {
+      const toggleHtml = section.toggle
+        ? `<label style="display:flex;align-items:center;gap:6px;font-weight:500;font-size:.85rem;cursor:pointer;">
+             <input type="checkbox" data-toggle="${section.toggle}" ${getDeep(config, section.toggle) !== false ? 'checked' : ''} style="width:auto;"/>
+             Section active
+           </label>`
+        : '';
+
+      const fieldsHtml = section.fields.map(f => renderField(f)).join('');
+
+      return `
+        <div class="section-card" id="section-${section.id}">
+          <h2>${section.icon || ''} ${escapeHtml(section.title)} ${toggleHtml}</h2>
+          ${fieldsHtml}
+        </div>`;
+    }
+
+    function renderField(field, scopePath) {
+      const fullKey = scopePath ? scopePath + '.' + field.key : field.key;
+      const val = scopePath ? field._val : getDeep(config, field.key);
+      const id = 'f-' + fullKey.replace(/\./g, '_');
+
+      switch (field.type) {
+        case 'text':
+        case 'email':
+          return `<div class="field">
+            <label for="${id}">${escapeHtml(field.label)}</label>
+            <input type="${field.type === 'email' ? 'email' : 'text'}" id="${id}" data-key="${fullKey}" value="${escapeHtml(val)}" ${field.required ? 'required' : ''} />
+          </div>`;
+        case 'textarea':
+          return `<div class="field">
+            <label for="${id}">${escapeHtml(field.label)}</label>
+            <textarea id="${id}" data-key="${fullKey}" rows="3">${escapeHtml(val)}</textarea>
+          </div>`;
+        case 'color':
+          return `<div class="field field--inline">
+            <div>
+              <label for="${id}">${escapeHtml(field.label)}</label>
+              <input type="color" id="${id}" data-key="${fullKey}" value="${escapeHtml(val || '#000000')}" />
+            </div>
+            <div>
+              <label for="${id}-hex">Hexa</label>
+              <input type="text" id="${id}-hex" data-key="${fullKey}" data-link-color="${id}" value="${escapeHtml(val)}" />
+            </div>
+          </div>`;
+        case 'select':
+          return `<div class="field">
+            <label for="${id}">${escapeHtml(field.label)}</label>
+            <select id="${id}" data-key="${fullKey}">
+              ${(field.options || []).map(o => `<option value="${escapeHtml(o)}" ${o === val ? 'selected' : ''}>${escapeHtml(o)}</option>`).join('')}
+            </select>
+          </div>`;
+        case 'image':
+          return renderImageField(fullKey, val, field);
+        case 'list':
+          return renderListField(fullKey, val || [], field);
+        case 'list-simple':
+          return renderListSimpleField(fullKey, val || [], field);
+        default:
+          return '';
+      }
+    }
+
+    function renderImageField(key, val, field) {
+      const id = 'f-' + key.replace(/\./g, '_');
+      const isUrl = /^https?:\/\//.test(val || '');
+      const preview = val
+        ? (isUrl
+            ? `<img class="preview" src="${escapeHtml(val)}" alt="" loading="lazy" />`
+            : `<img class="preview" src="/admin/clients-assets/${encodeURIComponent(SLUG)}/${escapeHtml(val)}" alt="" loading="lazy" onerror="this.outerHTML='<div class=\\'preview-missing\\'>Image manquante</div>'" />`)
+        : '<div class="preview-missing">Aucune image</div>';
+      return `<div class="field">
+        <label>${escapeHtml(field.label)}</label>
+        <div class="img-picker" data-img-field="${key}">
+          ${preview}
+          <input type="text" class="url-input" data-key="${key}" value="${escapeHtml(val)}" placeholder="assets/${field.folder || 'images'}/photo.jpg" />
+          <input type="file" accept="image/*" style="display:none;" data-upload="${key}" data-folder="${field.folder || 'images'}" />
+          <button type="button" class="btn-outline btn-sm" data-trigger-upload="${key}">Upload</button>
+        </div>
+      </div>`;
+    }
+
+    function renderListField(key, arr, field) {
+      const items = (arr || []).map((item, idx) => {
+        const subFields = field.itemFields.map(sf => {
+          const sfClone = Object.assign({}, sf);
+          sfClone._val = (item || {})[sf.key];
+          return renderField(sfClone, key + '[' + idx + ']');
+        }).join('');
+        return `<div class="list-item" data-list-key="${key}" data-list-idx="${idx}">
+          ${subFields}
+          <div class="list-item-actions">
+            <button type="button" class="btn-ghost btn-sm" data-list-up="${key}" data-idx="${idx}">↑</button>
+            <button type="button" class="btn-ghost btn-sm" data-list-down="${key}" data-idx="${idx}">↓</button>
+            <button type="button" class="btn-danger btn-sm" data-list-remove="${key}" data-idx="${idx}">Supprimer</button>
+          </div>
+        </div>`;
+      }).join('');
+
+      return `<div class="field">
+        <label>${escapeHtml(field.label)} <span style="color:#6b7280;font-weight:400;">(${arr.length})</span></label>
+        <div class="list-editor" data-list-container="${key}">
+          ${items || '<p style="text-align:center;color:#6b7280;font-size:.88rem;padding:10px;">Aucun élément. Ajoutez-en un avec le bouton ci-dessous.</p>'}
+        </div>
+        <button type="button" class="list-add" data-list-add="${key}" data-list-field='${JSON.stringify(field.itemFields).replace(/'/g, '&apos;')}'>+ Ajouter</button>
+      </div>`;
+    }
+
+    function renderListSimpleField(key, arr, field) {
+      const items = (arr || []).map((item, idx) =>
+        `<div class="list-item" style="display:flex;gap:8px;align-items:center;">
+          <input type="text" data-list-simple="${key}" data-idx="${idx}" value="${escapeHtml(item)}" style="flex:1;" />
+          <button type="button" class="btn-danger btn-sm" data-list-simple-remove="${key}" data-idx="${idx}">×</button>
+        </div>`
+      ).join('');
+      return `<div class="field">
+        <label>${escapeHtml(field.label)} <span style="color:#6b7280;font-weight:400;">(${arr.length})</span></label>
+        <div class="list-editor" data-list-simple-container="${key}">
+          ${items || '<p style="text-align:center;color:#6b7280;font-size:.88rem;padding:10px;">Aucun élément.</p>'}
+        </div>
+        <button type="button" class="list-add" data-list-simple-add="${key}">+ Ajouter</button>
+      </div>`;
+    }
+
+    /* ---------- Bindings ---------- */
+    function bindAllInputs() {
+      const root = document.getElementById('editor-content');
+
+      // Tous les inputs/textareas/selects avec data-key
+      root.querySelectorAll('[data-key]').forEach(el => {
+        el.addEventListener('input', () => {
+          let key = el.dataset.key;
+          const m = key.match(/^(.+?)\[(\d+)\]\.(.+)$/);
+          if (m) {
+            const arrKey = m[1], idx = parseInt(m[2], 10), prop = m[3];
+            const arr = getDeep(config, arrKey) || [];
+            if (!arr[idx]) arr[idx] = {};
+            arr[idx][prop] = el.value;
+            setDeep(config, arrKey, arr);
+          } else {
+            setDeep(config, key, el.value);
+          }
+          // Synchroniser color picker et input hexa
+          if (el.dataset.linkColor) {
+            const ce = document.getElementById(el.dataset.linkColor);
+            if (ce && /^#[0-9a-f]{6}$/i.test(el.value)) ce.value = el.value;
+          }
+          if (el.type === 'color') {
+            const hex = root.querySelector(`[data-link-color="${el.id}"]`);
+            if (hex) hex.value = el.value;
+          }
+          setDirty(true);
+        });
+      });
+
+      // Toggles de sections
+      root.querySelectorAll('[data-toggle]').forEach(el => {
+        el.addEventListener('change', () => {
+          setDeep(config, el.dataset.toggle, el.checked);
+          setDirty(true);
+        });
+      });
+
+      // Boutons d'upload
+      root.querySelectorAll('[data-trigger-upload]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.triggerUpload;
+          const inp = root.querySelector(`[data-upload="${key}"]`);
+          if (inp) inp.click();
+        });
+      });
+      root.querySelectorAll('[data-upload]').forEach(inp => {
+        inp.addEventListener('change', async () => {
+          const key = inp.dataset.upload;
+          const folder = inp.dataset.folder || 'images';
+          if (!inp.files || !inp.files[0]) return;
+          const fd = new FormData();
+          fd.append('file', inp.files[0]);
+          fd.append('folder', folder);
+          try {
+            const r = await fetch('/admin/api/clients/' + encodeURIComponent(SLUG) + '/upload', { method: 'POST', body: fd });
+            const j = await r.json();
+            if (!r.ok) { toast(j.error || 'Erreur upload', 'error'); return; }
+            // Met à jour le champ
+            const urlInput = root.querySelector(`.img-picker[data-img-field="${key}"] .url-input`);
+            if (urlInput) {
+              urlInput.value = j.path;
+              urlInput.dispatchEvent(new Event('input'));
+            }
+            // Mise à jour de la preview
+            const picker = root.querySelector(`.img-picker[data-img-field="${key}"]`);
+            const oldPreview = picker.querySelector('.preview, .preview-missing');
+            const img = new Image();
+            img.className = 'preview';
+            img.src = '/admin/clients-assets/' + encodeURIComponent(SLUG) + '/' + j.path + '?t=' + Date.now();
+            if (oldPreview) picker.replaceChild(img, oldPreview);
+            toast('Image uploadée', 'success');
+          } catch (e) {
+            toast('Erreur réseau', 'error');
+          }
+        });
+      });
+
+      // Listes complexes — ajouter / supprimer / déplacer
+      root.querySelectorAll('[data-list-add]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.listAdd;
+          const arr = getDeep(config, key) || [];
+          const newItem = {};
+          (JSON.parse(btn.dataset.listField.replace(/&apos;/g, "'")) || []).forEach(sf => { newItem[sf.key] = ''; });
+          arr.push(newItem);
+          setDeep(config, key, arr);
+          setDirty(true);
+          rerenderListSection(key);
+        });
+      });
+      root.querySelectorAll('[data-list-remove]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!confirm('Supprimer cet élément ?')) return;
+          const key = btn.dataset.listRemove;
+          const idx = parseInt(btn.dataset.idx, 10);
+          const arr = getDeep(config, key);
+          arr.splice(idx, 1);
+          setDirty(true);
+          rerenderListSection(key);
+        });
+      });
+      root.querySelectorAll('[data-list-up]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.listUp;
+          const idx = parseInt(btn.dataset.idx, 10);
+          if (idx === 0) return;
+          const arr = getDeep(config, key);
+          [arr[idx-1], arr[idx]] = [arr[idx], arr[idx-1]];
+          setDirty(true);
+          rerenderListSection(key);
+        });
+      });
+      root.querySelectorAll('[data-list-down]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.listDown;
+          const idx = parseInt(btn.dataset.idx, 10);
+          const arr = getDeep(config, key);
+          if (idx >= arr.length - 1) return;
+          [arr[idx+1], arr[idx]] = [arr[idx], arr[idx+1]];
+          setDirty(true);
+          rerenderListSection(key);
+        });
+      });
+
+      // Listes simples (string[])
+      root.querySelectorAll('[data-list-simple]').forEach(el => {
+        el.addEventListener('input', () => {
+          const key = el.dataset.listSimple;
+          const idx = parseInt(el.dataset.idx, 10);
+          const arr = getDeep(config, key) || [];
+          arr[idx] = el.value;
+          setDeep(config, key, arr);
+          setDirty(true);
+        });
+      });
+      root.querySelectorAll('[data-list-simple-add]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.listSimpleAdd;
+          const arr = getDeep(config, key) || [];
+          arr.push('');
+          setDeep(config, key, arr);
+          setDirty(true);
+          rerenderListSection(key);
+        });
+      });
+      root.querySelectorAll('[data-list-simple-remove]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.listSimpleRemove;
+          const idx = parseInt(btn.dataset.idx, 10);
+          const arr = getDeep(config, key);
+          arr.splice(idx, 1);
+          setDirty(true);
+          rerenderListSection(key);
+        });
+      });
+    }
+
+    function rerenderListSection(listKey) {
+      // Re-rend la section qui contient cette liste
+      const section = SECTIONS.find(s => s.fields.some(f => f.key === listKey));
+      if (!section) return;
+      const sectionEl = document.getElementById('section-' + section.id);
+      if (!sectionEl) return;
+      sectionEl.outerHTML = renderSection(section);
+      bindAllInputs();
+    }
+
+    /* ---------- Save / Publish ---------- */
+    async function save() {
+      const status = document.getElementById('save-status');
+      status.textContent = 'Sauvegarde…';
+      status.className = 'status';
+      try {
+        const r = await fetch('/admin/api/clients/' + encodeURIComponent(SLUG), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ config })
+        });
+        if (!r.ok) {
+          const j = await r.json().catch(() => ({}));
+          throw new Error(j.error || 'Erreur de sauvegarde');
+        }
+        return true;
+      } catch (e) {
+        toast('Erreur : ' + e.message, 'error');
+        status.textContent = 'Erreur';
+        status.className = 'status is-error';
+        return false;
+      }
+    }
+
+    async function build() {
+      try {
+        const r = await fetch('/admin/api/clients/' + encodeURIComponent(SLUG) + '/build', { method: 'POST' });
+        const j = await r.json();
+        if (!r.ok) throw new Error(j.error || 'Erreur de build');
+        return true;
+      } catch (e) {
+        toast('Build : ' + e.message, 'error');
+        return false;
+      }
+    }
+
+    async function publish() {
+      const status = document.getElementById('save-status');
+      status.textContent = 'Sauvegarde…';
+      const ok1 = await save();
+      if (!ok1) return;
+      status.textContent = 'Build du site…';
+      const ok2 = await build();
+      if (!ok2) return;
+      setDirty(false);
+      toast('Site publié ✓', 'success');
+    }
+
+    document.getElementById('publish-btn').onclick = publish;
+    document.getElementById('save-bar-publish').onclick = publish;
+
+    document.getElementById('preview-btn').onclick = () => {
+      // Ouvre le site buildé dans un nouvel onglet
+      // Sur le VPS, cela pointera vers le site déployé. En dev local, on ouvre le dist.
+      window.open('/admin/static/preview-redirect.html?slug=' + encodeURIComponent(SLUG), '_blank');
+    };
+
+    document.getElementById('logout-btn').onclick = async () => {
+      if (dirty && !confirm('Modifications non sauvegardées. Quitter quand même ?')) return;
+      await fetch('/admin/api/logout', { method: 'POST' });
+      location.href = '/admin/login';
+    };
+
+    load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestia Admin — Dashboard</title>
+  <link rel="stylesheet" href="/admin/static/style.css" />
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="topbar__brand">
+      Gestia Admin <span class="badge">Sites pro</span>
+    </div>
+    <div class="topbar__right">
+      <button class="btn-sm" id="logout-btn">Déconnexion</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="page-title">
+      <h1>Mes sites clients</h1>
+      <div class="actions">
+        <button class="btn-primary" id="new-client-btn">+ Nouveau client</button>
+      </div>
+    </div>
+
+    <div id="clients-list">
+      <div class="empty-state"><div class="icon">⏳</div>Chargement…</div>
+    </div>
+  </main>
+
+  <!-- Modale création nouveau client -->
+  <div class="modal-bg" id="new-modal">
+    <div class="modal">
+      <h2>Créer un nouveau client</h2>
+      <form id="new-form">
+        <div>
+          <label for="new-name">Nom commercial</label>
+          <input type="text" id="new-name" required placeholder="ex. Garage Martin" />
+        </div>
+        <div>
+          <label for="new-slug">Slug (dossier, URL)</label>
+          <input type="text" id="new-slug" required pattern="[a-z0-9][a-z0-9-]{1,50}" placeholder="ex. garage-martin" />
+          <p class="hint" style="font-size: .78rem; color: #6b7280; margin-top: 4px;">Lettres minuscules, chiffres et tirets uniquement.</p>
+        </div>
+        <div>
+          <label for="new-base">Modèle de base</label>
+          <select id="new-base">
+            <option value="hipolem">Site artisan complet (HIPOLEM)</option>
+            <option value="demo-paysagiste">Démo paysagiste</option>
+          </select>
+          <p class="hint" style="font-size: .78rem; color: #6b7280; margin-top: 4px;">Le nouveau client démarre avec une copie de ce modèle, à adapter.</p>
+        </div>
+        <div class="actions">
+          <button type="button" class="btn-ghost" id="cancel-new">Annuler</button>
+          <button type="submit" class="btn-primary">Créer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* --------- Toast --------- */
+    function toast(msg, type) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + (type || '');
+      setTimeout(() => t.classList.remove('show'), 3500);
+    }
+
+    /* --------- Chargement des clients --------- */
+    async function loadClients() {
+      const list = document.getElementById('clients-list');
+      try {
+        const r = await fetch('/admin/api/clients');
+        if (r.status === 401) { location.href = '/admin/login'; return; }
+        const { clients } = await r.json();
+
+        if (!clients.length) {
+          list.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>Aucun client pour le moment.</p><p style="margin-top:10px;font-size:.9rem;">Cliquez sur « + Nouveau client » pour démarrer.</p></div>';
+          return;
+        }
+
+        list.innerHTML = '<div class="clients-grid">' + clients.map(c => `
+          <a class="client-card" href="/admin/client?slug=${encodeURIComponent(c.slug)}">
+            <h3>${escapeHtml(c.businessName)}</h3>
+            <div class="slug">${escapeHtml(c.slug)}</div>
+            <div class="badges">
+              ${c.hasConfig ? '<span class="badge-mini badge-ok">Configuré</span>' : '<span class="badge-mini badge-warn">À configurer</span>'}
+              ${c.distExists ? '<span class="badge-mini badge-info">Buildé</span>' : '<span class="badge-mini badge-warn">Jamais buildé</span>'}
+            </div>
+          </a>
+        `).join('') + '</div>';
+      } catch (e) {
+        list.innerHTML = '<div class="empty-state"><div class="icon">⚠️</div>Erreur de chargement</div>';
+      }
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);
+    }
+
+    /* --------- Modale nouveau client --------- */
+    const modal = document.getElementById('new-modal');
+    document.getElementById('new-client-btn').onclick = () => {
+      document.getElementById('new-name').value = '';
+      document.getElementById('new-slug').value = '';
+      modal.classList.add('is-open');
+      setTimeout(() => document.getElementById('new-name').focus(), 50);
+    };
+    document.getElementById('cancel-new').onclick = () => modal.classList.remove('is-open');
+    modal.addEventListener('click', e => { if (e.target === modal) modal.classList.remove('is-open'); });
+
+    // Auto-générer le slug depuis le nom
+    document.getElementById('new-name').addEventListener('input', e => {
+      const slugInput = document.getElementById('new-slug');
+      if (!slugInput.dataset.touched) {
+        slugInput.value = e.target.value.toLowerCase()
+          .replace(/[àáâä]/g, 'a').replace(/[èéêë]/g, 'e')
+          .replace(/[ìíîï]/g, 'i').replace(/[òóôö]/g, 'o')
+          .replace(/[ùúûü]/g, 'u').replace(/[ç]/g, 'c')
+          .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 50);
+      }
+    });
+    document.getElementById('new-slug').addEventListener('input', e => { e.target.dataset.touched = '1'; });
+
+    document.getElementById('new-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('new-name').value.trim();
+      const slug = document.getElementById('new-slug').value.trim();
+      const base = document.getElementById('new-base').value;
+      try {
+        const r = await fetch('/admin/api/clients/new', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ slug, businessName: name, baseClient: base })
+        });
+        const j = await r.json();
+        if (!r.ok) { toast(j.error || 'Erreur', 'error'); return; }
+        toast('Client créé : ' + slug, 'success');
+        modal.classList.remove('is-open');
+        setTimeout(() => { location.href = '/admin/client?slug=' + encodeURIComponent(slug); }, 600);
+      } catch (e) {
+        toast('Erreur réseau', 'error');
+      }
+    });
+
+    /* --------- Déconnexion --------- */
+    document.getElementById('logout-btn').onclick = async () => {
+      await fetch('/admin/api/logout', { method: 'POST' });
+      location.href = '/admin/login';
+    };
+
+    loadClients();
+  </script>
+</body>
+</html>
