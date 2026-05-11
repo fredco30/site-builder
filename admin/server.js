@@ -282,6 +282,19 @@ app.post(ADMIN_PREFIX + '/api/clients/:slug/build', requireAuth, (req, res) => {
 });
 
 /* ----------------------------------------------------------
+   Servir les sites clients (dist/<slug>/) — en dernier pour ne
+   pas masquer les routes /admin/*
+   En production, c'est nginx qui sert ces fichiers directement
+   sur gestia.ovh/<slug>/ ; cette route est utile en local pour
+   la prévisualisation depuis l'éditeur.
+   ---------------------------------------------------------- */
+app.use('/', express.static(DIST_DIR, {
+  index: ['index.html'],
+  fallthrough: true,
+  extensions: ['html']
+}));
+
+/* ----------------------------------------------------------
    Helper : copie récursive de dossier
    ---------------------------------------------------------- */
 function copyDirRecursive(src, dst) {

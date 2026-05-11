@@ -657,9 +657,10 @@
     document.getElementById('save-bar-publish').onclick = publish;
 
     document.getElementById('preview-btn').onclick = () => {
-      // Ouvre le site buildé dans un nouvel onglet
-      // Sur le VPS, cela pointera vers le site déployé. En dev local, on ouvre le dist.
-      window.open('/admin/static/preview-redirect.html?slug=' + encodeURIComponent(SLUG), '_blank');
+      // Ouvre le site buildé dans un nouvel onglet.
+      // En prod (gestia.ovh) : nginx sert /<slug>/ depuis dist/<slug>/
+      // En local            : Express sert /<slug>/ via la route statique en fin de server.js
+      window.open('/' + encodeURIComponent(SLUG) + '/', '_blank');
     };
 
     document.getElementById('logout-btn').onclick = async () => {
