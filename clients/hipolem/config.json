@@ -318,7 +318,7 @@
     ],
     "signature": {
       "enabled": true,
-      "url":     "https://www.geoclic.fr",
+      "url":     "https://geoclic.fr/creations-web.html",
       "image_desktop": "assets/images/signature-geoclic-banner.png",
       "image_mobile":  "assets/images/signature-geoclic.png",
       "alt":  "Site internet créé par Geoclic Suite — Frédéric Lopez",
