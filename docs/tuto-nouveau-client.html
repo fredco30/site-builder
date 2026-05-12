@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tutoriel — Créer un site pour un nouveau client | GéoClic Suite Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1565C0;
+    --primary-dark: #0D47A1;
+    --primary-light: #1976D2;
+    --primary-bg: #E3F2FD;
+    --accent: #FF6F00;
+    --accent-dark: #E65100;
+    --accent-bg: #FFF4E5;
+    --success: #2E7D32;
+    --success-bg: #E8F5E9;
+    --danger: #C62828;
+    --danger-bg: #FFEBEE;
+    --warning: #F57C00;
+    --warning-bg: #FFF8E1;
+    --secondary: #37474F;
+    --text: #1A1A2E;
+    --text-light: #6B7280;
+    --border: #E5E7EB;
+    --bg: #FAFBFC;
+    --surface: #FFFFFF;
+    --shadow-sm: 0 2px 8px rgba(10,30,60,.06);
+    --shadow: 0 8px 24px rgba(10,30,60,.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--secondary);
+    line-height: 1.2;
+    letter-spacing: -.3px;
+  }
+
+  code, pre {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: .9em;
+  }
+
+  /* =========== HEADER =========== */
+  .doc-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 60px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: "";
+    position: absolute;
+    right: -100px; top: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,111,0,.25), transparent 70%);
+    border-radius: 50%;
+  }
+  .doc-header__inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .doc-header .breadcrumb {
+    font-size: .85rem;
+    opacity: .8;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .doc-header h1 {
+    color: white;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    margin-bottom: 18px;
+    font-weight: 800;
+  }
+  .doc-header .subtitle {
+    font-size: 1.15rem;
+    opacity: .95;
+    max-width: 760px;
+    line-height: 1.55;
+  }
+  .doc-header .meta {
+    margin-top: 26px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    font-size: .9rem;
+  }
+  .doc-header .meta-item {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.13);
+    backdrop-filter: blur(8px);
+    padding: 8px 16px;
+    border-radius: 999px;
+  }
+
+  /* =========== LAYOUT =========== */
+  .doc-wrap {
+    max-width: 1280px;
+    margin: -50px auto 60px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+  .doc-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 36px;
+    align-items: flex-start;
+  }
+
+  /* TOC sticky */
+  .doc-toc {
+    position: sticky;
+    top: 20px;
+    background: var(--surface);
+    padding: 22px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+  .doc-toc__title {
+    font-family: 'Montserrat';
+    font-weight: 800;
+    font-size: .75rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+  }
+  .doc-toc ol {
+    list-style: none;
+    counter-reset: toc;
+  }
+  .doc-toc li {
+    counter-increment: toc;
+    margin-bottom: 4px;
+  }
+  .doc-toc a {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    color: var(--text);
+    text-decoration: none;
+    font-size: .92rem;
+    line-height: 1.35;
+    transition: background .2s, color .2s;
+  }
+  .doc-toc a::before {
+    content: counter(toc);
+    font-family: 'Montserrat';
+    font-weight: 800;
+    color: var(--text-light);
+    font-size: .8rem;
+    min-width: 18px;
+  }
+  .doc-toc a:hover {
+    background: var(--primary-bg);
+    color: var(--primary);
+  }
+  .doc-toc a:hover::before { color: var(--primary); }
+
+  /* MAIN CONTENT */
+  .doc-content {
+    background: var(--surface);
+    border-radius: 14px;
+    padding: 48px 56px;
+    box-shadow: var(--shadow-sm);
+    min-width: 0;
+  }
+
+  /* SECTIONS / ÉTAPES */
+  .step {
+    margin-bottom: 60px;
+    scroll-margin-top: 20px;
+  }
+  .step + .step {
+    padding-top: 60px;
+    border-top: 1px solid var(--border);
+  }
+  .step__num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    font-family: 'Montserrat';
+    font-weight: 900;
+    font-size: 1.4rem;
+    box-shadow: 0 6px 18px rgba(21,101,192,.3);
+    margin-bottom: 18px;
+  }
+  .step h2 {
+    font-size: 1.85rem;
+    margin-bottom: 10px;
+  }
+  .step__intro {
+    font-size: 1.05rem;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    max-width: 720px;
+    line-height: 1.6;
+  }
+
+  .step h3 {
+    font-size: 1.2rem;
+    margin: 26px 0 10px;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .step h3::before {
+    content: "▸";
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+
+  .step p, .step li {
+    margin-bottom: 8px;
+    line-height: 1.7;
+  }
+  .step strong { color: var(--secondary); font-weight: 700; }
+  .step a { color: var(--primary); font-weight: 500; }
+  .step a:hover { text-decoration: underline; }
+
+  .step ul, .step ol {
+    margin: 0 0 16px 22px;
+  }
+  .step ul li, .step ol li {
+    margin-bottom: 8px;
+  }
+
+  /* CODE BLOCKS */
+  pre {
+    background: #2A2D34;
+    color: #E8E8E8;
+    padding: 16px 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 14px 0;
+    border-left: 4px solid var(--primary);
+    font-size: .88rem;
+    line-height: 1.55;
+  }
+  pre code { color: inherit; }
+  p code, li code {
+    background: #F1F3F5;
+    color: var(--accent-dark);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: .88em;
+    font-weight: 600;
+    border: 1px solid #E5E7EB;
+  }
+
+  /* CALLOUTS */
+  .callout {
+    border-left: 4px solid;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 18px 0;
+    background: var(--bg);
+  }
+  .callout__title {
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: .9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .callout--tip { border-color: var(--primary); background: var(--primary-bg); }
+  .callout--tip .callout__title { color: var(--primary-dark); }
+  .callout--warning { border-color: var(--warning); background: var(--warning-bg); }
+  .callout--warning .callout__title { color: var(--warning); }
+  .callout--success { border-color: var(--success); background: var(--success-bg); }
+  .callout--success .callout__title { color: var(--success); }
+  .callout--danger { border-color: var(--danger); background: var(--danger-bg); }
+  .callout--danger .callout__title { color: var(--danger); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* CHECKLISTS */
+  .checklist {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 18px 0;
+    list-style: none !important;
+    margin-left: 0 !important;
+  }
+  .checklist li {
+    padding: 6px 0 6px 32px;
+    position: relative;
+    margin-bottom: 4px !important;
+    font-size: .96rem;
+  }
+  .checklist li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 9px;
+    width: 18px; height: 18px;
+    border: 2px solid var(--primary);
+    border-radius: 4px;
+    background: white;
+  }
+
+  /* TABLES */
+  .doc-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 18px 0;
+    font-size: .94rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .doc-content table th {
+    background: var(--primary);
+    color: white;
+    padding: 12px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-family: 'Montserrat';
+  }
+  .doc-content table td {
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    background: white;
+    vertical-align: top;
+  }
+  .doc-content table tbody tr:nth-child(even) td { background: var(--bg); }
+  .doc-content table code { font-size: .85em; }
+
+  /* COLOR SWATCHES (palette par métier) */
+  .palette-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 18px 0;
+  }
+  .palette-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .palette-card__swatches {
+    display: flex;
+    height: 50px;
+  }
+  .palette-card__swatch {
+    flex: 1;
+  }
+  .palette-card__info {
+    padding: 12px 14px;
+  }
+  .palette-card__metier {
+    font-family: 'Montserrat';
+    font-weight: 700;
+    color: var(--secondary);
+    font-size: .95rem;
+    margin-bottom: 4px;
+  }
+  .palette-card__codes {
+    font-family: 'Consolas', monospace;
+    font-size: .75rem;
+    color: var(--text-light);
+    line-height: 1.4;
+  }
+
+  /* HEADER STEP MARKER (visual progress) */
+  .progress-bar {
+    background: white;
+    border-radius: 10px;
+    padding: 16px 24px;
+    margin-bottom: 36px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .progress-bar__label {
+    font-family: 'Montserrat';
+    font-weight: 700;
+    font-size: .85rem;
+    text-transform: uppercase;
+    color: var(--text-light);
+    letter-spacing: 1px;
+  }
+  .progress-pill {
+    background: var(--primary-bg);
+    color: var(--primary-dark);
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 600;
+  }
+
+  /* FOOTER */
+  .doc-footer {
+    text-align: center;
+    color: var(--text-light);
+    padding: 30px 20px 50px;
+    font-size: .9rem;
+  }
+  .doc-footer a { color: var(--primary); font-weight: 600; }
+
+  /* IMPRESSION */
+  @media print {
+    body { background: white; }
+    .doc-header { background: var(--primary); padding: 30px 20px; }
+    .doc-toc { display: none; }
+    .doc-grid { grid-template-columns: 1fr; }
+    .doc-content { box-shadow: none; padding: 20px; }
+    .step { page-break-inside: avoid; }
+    .step + .step { page-break-before: auto; }
+    pre { background: #f4f4f4; color: black; border: 1px solid #ccc; }
+    .callout { page-break-inside: avoid; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 960px) {
+    .doc-grid { grid-template-columns: 1fr; }
+    .doc-toc {
+      position: static;
+      max-height: none;
+    }
+    .doc-content { padding: 32px 24px; }
+  }
+  @media (max-width: 600px) {
+    .doc-header { padding: 40px 20px 60px; }
+    .doc-content { padding: 24px 18px; }
+    .step h2 { font-size: 1.4rem; }
+    .palette-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== HEADER ===================== -->
+<header class="doc-header">
+  <div class="doc-header__inner">
+    <div class="breadcrumb">GéoClic Suite Pro · Documentation interne</div>
+    <h1>Créer un site internet pour un nouveau client, étape par étape</h1>
+    <p class="subtitle">
+      Du brief initial à la mise en ligne sur le serveur, ce guide couvre l'intégralité du process en 9 étapes.
+      Objectif : livrer un site pro de qualité en moins de 6 heures de travail effectif.
+    </p>
+    <div class="meta">
+      <span class="meta-item">⏱️ Durée totale : 4 à 6 h</span>
+      <span class="meta-item">📅 Délai client : 2 à 3 semaines</span>
+      <span class="meta-item">📄 Version : mai 2026</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===================== LAYOUT ===================== -->
+<div class="doc-wrap">
+  <div class="doc-grid">
+
+    <!-- ============== TABLE DES MATIÈRES ============== -->
+    <aside class="doc-toc">
+      <div class="doc-toc__title">Étapes du process</div>
+      <ol>
+        <li><a href="#etape-1">Recevoir &amp; valider le brief</a></li>
+        <li><a href="#etape-2">Créer le client dans l'admin</a></li>
+        <li><a href="#etape-3">Identité &amp; contact</a></li>
+        <li><a href="#etape-4">Logo &amp; couleurs (palette métier)</a></li>
+        <li><a href="#etape-5">Rédiger les sections</a></li>
+        <li><a href="#etape-6">Uploader les photos</a></li>
+        <li><a href="#etape-7">Build, preview, quality check</a></li>
+        <li><a href="#etape-8">Mise en ligne</a></li>
+        <li><a href="#etape-9">Livraison &amp; facturation</a></li>
+      </ol>
+    </aside>
+
+    <!-- ============== CONTENU PRINCIPAL ============== -->
+    <main class="doc-content">
+
+      <div class="progress-bar">
+        <span class="progress-bar__label">Avant de commencer</span>
+        <span class="progress-pill">Admin opérationnel</span>
+        <span class="progress-pill">Brief client reçu</span>
+        <span class="progress-pill">Photos &amp; logo disponibles</span>
+      </div>
+
+      <!-- ============== ÉTAPE 1 ============== -->
+      <section class="step" id="etape-1">
+        <div class="step__num">1</div>
+        <h2>Recevoir &amp; valider le brief du client</h2>
+        <p class="step__intro">
+          Tout commence par les réponses du formulaire Tally. Avant de toucher au code ou à l'admin,
+          vérifier que tu as <strong>tout ce qu'il faut</strong>, sinon tu vas perdre du temps à relancer.
+        </p>
+
+        <h3>Sources possibles du brief</h3>
+        <ul>
+          <li><strong>Idéal</strong> : le client a rempli le formulaire Tally (8 pages, 36 questions, ~15-20 min)</li>
+          <li><strong>Acceptable</strong> : brief par email ou téléphone, retranscrit dans un fichier texte</li>
+          <li><strong>À éviter</strong> : briefs oraux sans trace écrite — risque d'oubli</li>
+        </ul>
+
+        <h3>Checklist : qu'est-ce qu'il te faut absolument ?</h3>
+        <ul class="checklist">
+          <li>Nom commercial + SIRET (optionnel pour l'affichage)</li>
+          <li>Slogan / tagline courte</li>
+          <li>Téléphone + email + zone d'intervention</li>
+          <li>3 à 4 prestations principales (titre + description 1 phrase)</li>
+          <li>1 prestation phare avec 4 points forts + 6 sous-prestations détaillées</li>
+          <li>Logo (PNG/SVG, fond transparent idéal)</li>
+          <li>6 à 12 photos de réalisations (format paysage, &gt; 1200 px de large)</li>
+          <li>3 témoignages clients (texte + auteur)</li>
+          <li>Couleurs souhaitées (codes hex ou descriptions)</li>
+          <li>Formule choisie (Essentiel, Pro ou Pack annuel)</li>
+          <li>Validation des CGV (engagement, modifs, propriété)</li>
+        </ul>
+
+        <div class="callout callout--warning">
+          <div class="callout__title">⚠️ Si une info manque</div>
+          <p>
+            <strong>Ne démarre pas le site</strong>. Relance le client avec une liste précise et courte
+            (max 5 points). Une relance vague (« il manque des trucs ») n'aboutit jamais. Préfère :
+            <em>« Pour démarrer ton site, il me manque : ton logo en PNG, 6 photos de chantiers, et 2 témoignages clients. Merci ! »</em>
+          </p>
+        </div>
+
+        <h3>Stocker le brief proprement</h3>
+        <p>
+          Crée un dossier <code>brief-&lt;nom-client&gt;</code> sur ton PC où tu mets : export PDF des réponses Tally,
+          emails de relance, photos brutes (avant retouche), logo original, etc. Ça te servira si le client
+          revient dans 6 mois pour modifier.
+        </p>
+      </section>
+
+      <!-- ============== ÉTAPE 2 ============== -->
+      <section class="step" id="etape-2">
+        <div class="step__num">2</div>
+        <h2>Créer le client dans l'admin</h2>
+        <p class="step__intro">
+          La méthode recommandée : passer par l'admin web. Plus rapide et plus visuel que l'édition manuelle de fichiers JSON.
+        </p>
+
+        <h3>Méthode A — Via l'admin web (recommandé)</h3>
+        <ol>
+          <li>Aller sur <a href="https://gestia.ovh/admin" target="_blank">https://gestia.ovh/admin</a></li>
+          <li>Se connecter avec le mot de passe admin</li>
+          <li>Cliquer sur le bouton <strong>« + Nouveau client »</strong></li>
+          <li>Renseigner :
+            <ul>
+              <li><strong>Nom commercial</strong> : ex. <code>Garage Martin</code></li>
+              <li><strong>Slug</strong> : auto-généré depuis le nom (ex. <code>garage-martin</code>) — minuscules, tirets, pas d'accents</li>
+              <li><strong>Modèle de base</strong> : choisir <em>HIPOLEM</em> par défaut, ou <em>Démo paysagiste</em> si métier proche</li>
+            </ul>
+          </li>
+          <li>Cliquer sur <strong>Créer</strong> → l'éditeur s'ouvre automatiquement sur ce nouveau client</li>
+        </ol>
+
+        <div class="callout callout--tip">
+          <div class="callout__title">💡 Bon réflexe</div>
+          <p>
+            Le slug devient l'URL du site : <code>https://gestia.ovh/&lt;slug&gt;/</code>. Choisis-le bien dès le départ —
+            le changer ensuite implique de migrer les fichiers et reconfigurer nginx.
+          </p>
+        </div>
+
+        <h3>Méthode B — Via la CLI (avancé, hors admin)</h3>
+        <pre><code># Sur ton PC, dans templates-vitrine
+cd C:\Users\projets\templates-vitrine
+xcopy /E /I clients\hipolem clients\garage-martin
+# Puis éditer manuellement clients\garage-martin\config.json</code></pre>
+
+        <p>Plus risqué (oubli de champs) mais utile pour des configs très complexes ou en lot.</p>
+      </section>
+
+      <!-- ============== ÉTAPE 3 ============== -->
+      <section class="step" id="etape-3">
+        <div class="step__num">3</div>
+        <h2>Identité &amp; contact</h2>
+        <p class="step__intro">
+          La première section à remplir dans l'éditeur. Ces données apparaîtront dans le header, le footer,
+          le formulaire de contact et les balises SEO.
+        </p>
+
+        <h3>Champs à remplir</h3>
+        <table>
+          <thead>
+            <tr><th>Champ</th><th>Format attendu</th><th>Exemple</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Nom commercial</td><td>Texte (max 40 car.)</td><td><code>HIPOLEM Bâtiment</code></td></tr>
+            <tr><td>SIRET</td><td>14 chiffres avec espaces</td><td><code>452 157 118 00012</code></td></tr>
+            <tr><td>Slogan footer</td><td>Phrase courte mémorisable</td><td><code>Avec Hipolem, pas de problème !</code></td></tr>
+            <tr><td>Bandeau top</td><td>Texte de rassurance bref</td><td><code>Devis gratuit &amp; sans engagement</code></td></tr>
+            <tr><td>Téléphone affiché</td><td>Format français lisible</td><td><code>06 15 69 08 71</code></td></tr>
+            <tr><td>Téléphone (lien tel:)</td><td>Format international, sans espace</td><td><code>+33615690871</code></td></tr>
+            <tr><td>Email</td><td>Email pro de préférence</td><td><code>contact@entreprise.fr</code></td></tr>
+            <tr><td>Zone d'intervention</td><td>Localisation claire</td><td><code>Aix-en-Provence et 30 km autour</code></td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout callout--warning">
+          <div class="callout__title">⚠️ Téléphone — attention au format</div>
+          <p>
+            Le format affiché et le format pour le lien <code>tel:</code> sont différents !
+            Affiché : <code>06 15 69 08 71</code> (avec espaces, plus lisible).
+            Lien : <code>+33615690871</code> (sans espace, format international, sinon le clic ne marche pas sur certains téléphones).
+          </p>
+        </div>
+
+        <h3>SEO &amp; métadonnées</h3>
+        <p>
+          Souvent oublié, mais c'est ce qui détermine comment Google affichera le site dans les résultats de recherche.
+          Rédige ces 2 champs avec soin :
+        </p>
+        <ul>
+          <li><strong>Title (titre de la page)</strong> : max 60 caractères. Inclure métier + ville + nom.
+            <br>Ex. : <code>HIPOLEM Bâtiment - Rénovation salle de bains, climatisation</code></li>
+          <li><strong>Meta description</strong> : 150-160 caractères. Vendre le service en 1 phrase percutante.
+            <br>Ex. : <code>Artisan spécialisé en rénovation de salle de bains, climatisation, chauffage. Devis gratuit, intervention rapide et travail soigné.</code></li>
+        </ul>
+      </section>
+
+      <!-- ============== ÉTAPE 4 ============== -->
+      <section class="step" id="etape-4">
+        <div class="step__num">4</div>
+        <h2>Logo &amp; couleurs (palette par métier)</h2>
+        <p class="step__intro">
+          Le visuel donne 80 % de la perception de qualité. Prends 30 minutes à bien faire cette étape.
+        </p>
+
+        <h3>Logo</h3>
+        <ul>
+          <li><strong>Format idéal</strong> : PNG avec fond transparent, hauteur ~200 px minimum</li>
+          <li><strong>Format alternatif</strong> : SVG (parfait pour la qualité à tout zoom)</li>
+          <li><strong>À éviter</strong> : JPG avec fond blanc (ça se voit sur fond coloré), logo en très basse résolution</li>
+          <li><strong>Si pas de logo</strong> : utiliser un placeholder texte stylisé (voir démo paysagiste) ou proposer une création simple en option</li>
+        </ul>
+
+        <p>Dans l'éditeur, section <strong>🎨 Logo &amp; couleurs</strong>, cliquer sur <strong>Upload</strong> à côté du champ Logo.</p>
+
+        <h3>Palette de couleurs — 7 valeurs à définir</h3>
+        <p>Le template utilise 7 couleurs paramétrables. Toujours définir les 7 (pour les variantes hover, etc.).</p>
+        <ol>
+          <li><strong>Primaire</strong> : couleur principale des CTAs et titres (la « marque »)</li>
+          <li><strong>Primaire foncée</strong> : variante au survol des CTAs</li>
+          <li><strong>Secondaire</strong> : couleur d'accent (sections climatisation type)</li>
+          <li><strong>Secondaire foncée</strong> : variante au survol</li>
+          <li><strong>Tertiaire</strong> : couleur 3e accent (salle de bains type)</li>
+          <li><strong>Tertiaire foncée</strong> : variante au survol</li>
+          <li><strong>Sombre</strong> : couleur des titres et du footer</li>
+        </ol>
+
+        <h3>Palettes prêtes à l'emploi par métier</h3>
+
+        <div class="palette-grid">
+          <div class="palette-card">
+            <div class="palette-card__swatches">
+              <div class="palette-card__swatch" style="background:#d4202a;"></div>
+              <div class="palette-card__swatch" style="background:#1873bf;"></div>
+              <div class="palette-card__swatch" style="background:#2e8a55;"></div>
+              <div class="palette-card__swatch" style="background:#1a1a1a;"></div>
+            </div>
+            <div class="palette-card__info">
+              <div class="palette-card__metier">Bâtiment / Rénovation</div>
+              <div class="palette-card__codes">#d4202a · #1873bf · #2e8a55 · #1a1a1a</div>
+            </div>
+          </div>
+
+          <div class="palette-card">
+            <div class="palette-card__swatches">
+              <div class="palette-card__swatch" style="background:#2d6a4f;"></div>
+              <div class="palette-card__swatch" style="background:#c46b2c;"></div>
+              <div class="palette-card__swatch" style="background:#74c69d;"></div>
+              <div class="palette-card__swatch" style="background:#1b2920;"></div>
+            </div>
+            <div class="palette-card__info">
+              <div class="palette-card__metier">Paysagiste / Jardin</div>
+              <div class="palette-card__codes">#2d6a4f · #c46b2c · #74c69d · #1b2920</div>
+            </div>
+          </div>
+
+          <div class="palette-card">
+            <div class="palette-card__swatches">
+              <div class="palette-card__swatch" style="background:#c0392b;"></div>
+              <div class="palette-card__swatch" style="background:#2c3e50;"></div>
+              <div class="palette-card__swatch" style="background:#f39c12;"></div>
+              <div class="palette-card__swatch" style="background:#212121;"></div>
+            </div>
+            <div class="palette-card__info">
+              <div class="palette-card__metier">Garage / Mécanique</div>
+              <div class="palette-card__codes">#c0392b · #2c3e50 · #f39c12 · #212121</div>
+            </div>
+          </div>
+
+          <div class="palette-card">
+            <div class="palette-card__swatches">
+              <div class="palette-card__swatch" style="background:#d4af37;"></div>
+              <div class="palette-card__swatch" style="background:#8b6914;"></div>
+              <div class="palette-card__swatch" style="background:#e8c878;"></div>
+              <div class="palette-card__swatch" style="background:#2d2417;"></div>
+            </div>
+            <div class="palette-card__info">
+              <div class="palette-card__metier">Esthéticienne / Coiffure</div>
+              <div class="palette-card__codes">#d4af37 · #8b6914 · #e8c878 · #2d2417</div>
+            </div>
+          </div>
+
+          <div class="palette-card">
+            <div class="palette-card__swatches">
+              <div class="palette-card__swatch" style="background:#8b0000;"></div>
+              <div class="palette-card__swatch" style="background:#cd853f;"></div>
+              <div class="palette-card__swatch" style="background:#daa520;"></div>
+              <div class="palette-card__swatch" style="background:#1a1a1a;"></div>
+            </div>
+            <div class="palette-card__info">
+              <div class="palette-card__metier">Restaurant</div>
+              <div class="palette-card__codes">#8b0000 · #cd853f · #daa520 · #1a1a1a</div>
+            </div>
+          </div>
+
+          <div class="palette-card">
+            <div class="palette-card__swatches">
+              <div class="palette-card__swatch" style="background:#0277bd;"></div>
+              <div class="palette-card__swatch" style="background:#01579b;"></div>
+              <div class="palette-card__swatch" style="background:#4fc3f7;"></div>
+              <div class="palette-card__swatch" style="background:#212121;"></div>
+            </div>
+            <div class="palette-card__info">
+              <div class="palette-card__metier">Plombier / Électricien</div>
+              <div class="palette-card__codes">#0277bd · #01579b · #4fc3f7 · #212121</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout--tip">
+          <div class="callout__title">💡 Si le client a déjà une charte</div>
+          <p>
+            Toujours partir des couleurs existantes (logo, véhicule, vêtements de travail). La cohérence visuelle
+            entre le terrain et le site renforce la crédibilité. Si le client n'a aucune couleur définie, utilise une
+            des palettes ci-dessus.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============== ÉTAPE 5 ============== -->
+      <section class="step" id="etape-5">
+        <div class="step__num">5</div>
+        <h2>Rédiger les sections de contenu</h2>
+        <p class="step__intro">
+          La partie qui prend le plus de temps mais aussi celle qui rapporte le plus en qualité perçue.
+          Compter 1h30 à 2h pour un site bien rédigé.
+        </p>
+
+        <h3>Section Hero (la plus importante)</h3>
+        <p>C'est ce que voit le visiteur dans les 3 premières secondes. Doit donner envie de scroller.</p>
+        <ul>
+          <li><strong>Bannière desktop</strong> : 2000-2500 px de large, format paysage, montre une réalisation (pas de stock générique)</li>
+          <li><strong>Bannière mobile</strong> : version portrait recadrée, ou même image (responsive)</li>
+          <li><strong>Titre H1</strong> : le métier + les services en une phrase. <em>HTML autorisé</em> pour mettre des mots en couleur avec <code>&lt;span class="text-blue"&gt;...&lt;/span&gt;</code></li>
+          <li><strong>Sous-titre</strong> : une phrase de positionnement (qui es-tu, pour qui)</li>
+          <li><strong>2 CTAs</strong> : un principal (ex. « Demander un devis » → #contact) et un secondaire (ex. « Voir réalisations » → #realisations)</li>
+        </ul>
+
+        <h3>Section Prestations principales (3 ou 4 cartes)</h3>
+        <p>
+          Choisir <strong>3 ou 4 prestations</strong>, pas plus. Chaque carte a un titre court (max 3 mots), une
+          description en 1 phrase, et une couleur d'accent. Les 4 accents possibles : <code>green</code>, <code>blue</code>, <code>red</code>, <code>dark</code>.
+        </p>
+
+        <h3>Section Showcase (prestation phare)</h3>
+        <ul>
+          <li><strong>Surtitre</strong> : ex. <em>Notre savoir-faire préféré</em></li>
+          <li><strong>Titre</strong> : ex. <em>La salle de bains, notre cœur de métier</em></li>
+          <li><strong>Accroche</strong> : 2-3 phrases qui racontent la passion / l'expertise</li>
+          <li><strong>4 bullets</strong> : points forts uniques (conception sur mesure, finitions, délais, etc.)</li>
+          <li><strong>3-4 photos</strong> dans la galerie courte</li>
+        </ul>
+
+        <h3>Section Mini-cartes (sous-prestations)</h3>
+        <p>6 mini-cartes qui détaillent la prestation phare. Format : titre + 1 phrase descriptive.</p>
+
+        <h3>Méthode (4 étapes)</h3>
+        <p>Par défaut : Écoute → Devis → Réalisation → Livraison. À adapter si le métier a une méthode particulière.</p>
+
+        <h3>Galerie réalisations</h3>
+        <ul>
+          <li>Entre <strong>6 et 12 images</strong> (en dessous, ça fait pauvre ; au-dessus, le visiteur n'aura jamais le temps de regarder)</li>
+          <li>Définir 2-3 <strong>filtres de catégorie</strong> (ex. Salle de bains / Climatisation)</li>
+          <li>Chaque image : catégorie (slug), texte alt (pour Google + accessibilité), légende affichée au survol</li>
+          <li>La lightbox est automatique (clic sur l'image → plein écran avec navigation)</li>
+        </ul>
+
+        <h3>Avis clients</h3>
+        <p>3 témoignages, idéalement avec nom + ville. Si le client n'a pas encore d'avis, démarrer avec des témoignages oraux retranscrits, puis collecter des vrais avis Google dans les premiers mois.</p>
+
+        <div class="callout callout--success">
+          <div class="callout__title">✓ Astuce gain de temps</div>
+          <p>
+            Si tu galères à rédiger, demande au client de t'envoyer 5-10 phrases brutes sur son métier, et utilise Claude
+            ou ChatGPT pour les transformer en textes propres pour chaque section. Toujours <strong>relire et adapter</strong>
+            à la personnalité du client (ne pas garder le style IA générique).
+          </p>
+        </div>
+      </section>
+
+      <!-- ============== ÉTAPE 6 ============== -->
+      <section class="step" id="etape-6">
+        <div class="step__num">6</div>
+        <h2>Uploader &amp; optimiser les photos</h2>
+        <p class="step__intro">
+          Une bonne photo de chantier vaut mieux qu'une excellente photo de stock. Préfère toujours les vraies réalisations.
+        </p>
+
+        <h3>Formats acceptés &amp; tailles recommandées</h3>
+        <table>
+          <thead>
+            <tr><th>Usage</th><th>Format</th><th>Dimensions</th><th>Poids cible</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Bannière hero desktop</td><td>JPG ou WebP</td><td>2000 × 800 px</td><td>&lt; 300 Ko</td></tr>
+            <tr><td>Bannière hero mobile</td><td>JPG ou WebP</td><td>800 × 1000 px</td><td>&lt; 150 Ko</td></tr>
+            <tr><td>Galerie</td><td>JPG ou WebP</td><td>1200 × 1500 px (portrait)</td><td>&lt; 200 Ko/image</td></tr>
+            <tr><td>Showcase</td><td>JPG ou WebP</td><td>1200 × 1500 px</td><td>&lt; 200 Ko</td></tr>
+            <tr><td>Logo</td><td>PNG ou SVG</td><td>min. 200 px hauteur</td><td>&lt; 50 Ko</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Comment uploader via l'admin</h3>
+        <ol>
+          <li>Dans l'éditeur, section <strong>📸 Galerie réalisations</strong></li>
+          <li>Pour chaque image : cliquer sur <strong>Upload</strong> → choisir le fichier sur ton PC</li>
+          <li>L'image est automatiquement uploadée dans <code>assets/images/</code> du client</li>
+          <li>Remplir le texte alt (pour Google) et la légende (affichée au survol)</li>
+        </ol>
+
+        <h3>Si le client n'a pas de photos</h3>
+        <ul>
+          <li><strong>Option A</strong> : lui faire prendre lui-même (smartphone moderne suffit, mode portrait, lumière naturelle)</li>
+          <li><strong>Option B</strong> : organiser une séance photo (option payante, 290 € HT pour une demi-journée)</li>
+          <li><strong>Option C (provisoire)</strong> : utiliser des photos de banque libre (Unsplash, Pexels — chercher le métier en anglais : <em>bathroom renovation</em>, <em>landscaping</em>...) en attendant les vraies</li>
+        </ul>
+
+        <div class="callout callout--warning">
+          <div class="callout__title">⚠️ Optimiser le poids</div>
+          <p>
+            Une photo brute d'iPhone fait souvent 4-6 Mo. Trop lourd pour le web. Avant upload, passer par
+            <a href="https://squoosh.app" target="_blank">squoosh.app</a> (gratuit, dans le navigateur) pour redimensionner
+            et compresser. Cible : &lt; 200 Ko par image de galerie.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============== ÉTAPE 7 ============== -->
+      <section class="step" id="etape-7">
+        <div class="step__num">7</div>
+        <h2>Build, preview, quality check</h2>
+        <p class="step__intro">
+          Avant de mettre en ligne, tester rigoureusement. Une heure de quality check économise 10 heures de SAV.
+        </p>
+
+        <h3>Build et preview</h3>
+        <ol>
+          <li>Dans l'admin, cliquer sur <strong>« Sauvegarder &amp; publier »</strong> — ça sauvegarde le config + lance <code>build.js</code> + régénère le site</li>
+          <li>Cliquer sur le bouton <strong>« Aperçu »</strong> en haut → ouvre le site dans un nouvel onglet</li>
+          <li>L'URL est <code>https://gestia.ovh/&lt;slug&gt;/</code> (par défaut accessible depuis n'importe quel device)</li>
+        </ol>
+
+        <h3>Checklist de validation visuelle</h3>
+        <ul class="checklist">
+          <li>Le logo s'affiche correctement (pas pixelisé, bien dimensionné)</li>
+          <li>Les couleurs correspondent à la palette définie (CTAs, titres, accents)</li>
+          <li>Le titre H1 du hero affiche les couleurs si HTML utilisé</li>
+          <li>La bannière hero n'est pas déformée (rapport d'aspect respecté)</li>
+          <li>Toutes les prestations principales ont leur icône, titre, description</li>
+          <li>La galerie : pas de cassure, toutes les images chargent, lightbox fonctionne au clic</li>
+          <li>Filtres de la galerie : chaque filtre affiche uniquement les bons items</li>
+          <li>Les avis clients sont tous remplis (3 témoignages complets)</li>
+          <li>Le formulaire de contact a tous les types de projets adaptés au métier</li>
+          <li>Le footer affiche bien le nom, le slogan, les services, les coordonnées</li>
+          <li>Le numéro de tel est cliquable et lance l'appel sur mobile</li>
+          <li>L'email est cliquable et ouvre la messagerie</li>
+        </ul>
+
+        <h3>Test mobile (impératif)</h3>
+        <p>
+          80 % des visites se feront sur smartphone. Ouvre le site sur ton téléphone OU dans Chrome DevTools (F12 → icône mobile).
+          Tests à faire :
+        </p>
+        <ul class="checklist">
+          <li>La navigation s'ouvre/ferme correctement (burger menu)</li>
+          <li>Le bouton appel flottant en bas à droite est visible et fonctionne</li>
+          <li>Le formulaire est utilisable au pouce (boutons assez gros)</li>
+          <li>Les photos en galerie restent lisibles (pas trop petites)</li>
+          <li>Pas de scroll horizontal (le site déborde pas à droite)</li>
+        </ul>
+
+        <h3>Test du formulaire de devis</h3>
+        <ol>
+          <li>Vérifier l'URL Formspree dans <code>contact_form.action</code></li>
+          <li>Remplir le formulaire avec une fausse demande et envoyer</li>
+          <li>Vérifier que tu reçois bien l'email de notification</li>
+          <li>Vérifier que le message de confirmation s'affiche au visiteur</li>
+        </ol>
+
+        <div class="callout callout--danger">
+          <div class="callout__title">⛔ Avant de mettre en ligne</div>
+          <p>
+            Vérifier que <code>contact_form.action</code> n'est pas resté à <code>VOTRE_ID_FORMSPREE</code>.
+            Si oui, le formulaire ne fonctionne pas et les demandes du client sont perdues.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============== ÉTAPE 8 ============== -->
+      <section class="step" id="etape-8">
+        <div class="step__num">8</div>
+        <h2>Mise en ligne définitive</h2>
+        <p class="step__intro">
+          Deux scénarios : sous-domaine sur gestia.ovh (rapide, parfait pour démarrer) ou domaine custom du client (plus pro, demande config DNS).
+        </p>
+
+        <h3>Scénario A — URL sous gestia.ovh (par défaut)</h3>
+        <p>
+          C'est <strong>automatique</strong> : dès que le site est buildé, il est accessible à <code>https://gestia.ovh/&lt;slug&gt;/</code>.
+          Rien à configurer. Idéal pour la démo / validation client.
+        </p>
+
+        <h3>Scénario B — Domaine custom du client</h3>
+        <p>Suivre les étapes dans l'ordre :</p>
+
+        <h4 style="margin-top:18px;font-size:1.05rem;color:var(--secondary);">B.1 — Acheter ou récupérer le domaine</h4>
+        <ul>
+          <li>Si le client a déjà un domaine : récupérer les accès registrar (OVH, Gandi, etc.)</li>
+          <li>Si pas de domaine : acheter chez OVH (~12 €/an, refacturer 20 €/an au client)</li>
+        </ul>
+
+        <h4 style="margin-top:14px;font-size:1.05rem;color:var(--secondary);">B.2 — Pointer le DNS vers le VPS</h4>
+        <p>Sur l'interface du registrar :</p>
+        <pre><code>Type: A    Nom: @           Valeur: 135.125.159.92
+Type: A    Nom: www         Valeur: 135.125.159.92</code></pre>
+        <p>Attendre 5-30 min la propagation, vérifier : <code>dig +short &lt;domaine.fr&gt;</code></p>
+
+        <h4 style="margin-top:14px;font-size:1.05rem;color:var(--secondary);">B.3 — Créer le vhost nginx</h4>
+        <p>Sur le VPS gestia.ovh, créer le fichier <code>/etc/nginx/sites-available/&lt;slug&gt;</code> :</p>
+        <pre><code>server {
+    listen 80;
+    server_name &lt;domaine.fr&gt; www.&lt;domaine.fr&gt;;
+    root /opt/site-builder/dist/&lt;slug&gt;;
+    index index.html;
+    location / { try_files $uri $uri/ /index.html; }
+}</code></pre>
+        <p>Puis activer et tester :</p>
+        <pre><code>sudo ln -sf /etc/nginx/sites-available/&lt;slug&gt; /etc/nginx/sites-enabled/
+sudo nginx -t &amp;&amp; sudo systemctl reload nginx</code></pre>
+
+        <h4 style="margin-top:14px;font-size:1.05rem;color:var(--secondary);">B.4 — HTTPS Let's Encrypt</h4>
+        <pre><code>sudo certbot --nginx -d &lt;domaine.fr&gt; -d www.&lt;domaine.fr&gt;</code></pre>
+        <p>Certbot modifie automatiquement le vhost pour ajouter SSL + redirection HTTP→HTTPS.</p>
+
+        <div class="callout callout--tip">
+          <div class="callout__title">💡 Renouvellement automatique</div>
+          <p>
+            Certbot crée un cron qui renouvelle le certificat tous les 60 jours. Aucune action à prévoir pendant 3 mois minimum.
+            Si jamais ça échoue : <code>sudo certbot renew</code> manuellement.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============== ÉTAPE 9 ============== -->
+      <section class="step" id="etape-9">
+        <div class="step__num">9</div>
+        <h2>Livraison &amp; facturation</h2>
+        <p class="step__intro">
+          La dernière ligne droite : remettre le site au client, encaisser, mettre en place le suivi.
+        </p>
+
+        <h3>Email type de livraison</h3>
+        <pre><code>Objet : Votre site &lt;Nom Entreprise&gt; est en ligne !
+
+Bonjour &lt;Prénom&gt;,
+
+Votre site internet est désormais accessible à l'adresse :
+👉 https://&lt;url-du-site&gt;
+
+Au programme :
+- Toutes les informations de votre entreprise et services
+- Un formulaire de devis qui vous transmettra chaque demande par email
+- Une galerie de vos réalisations
+- Un site optimisé pour Google et tous les smartphones
+
+Quelques bonnes pratiques pour la suite :
+- Récolter des avis Google (je peux vous transmettre une template SMS si besoin)
+- M'envoyer chaque mois 1-2 nouvelles photos de chantier pour enrichir la galerie
+- Me prévenir dès qu'un changement est nécessaire (modification du mois incluse)
+
+Pour toute question ou demande de modification :
+- Email : contact@geoclic.fr
+- Téléphone : &lt;ton numéro&gt;
+
+À très vite,
+Frédéric
+GéoClic Suite Pro</code></pre>
+
+        <h3>Facturation</h3>
+        <ul>
+          <li>Établir la facture selon la formule choisie (Essentiel 300, Pro 590, Pack annuel 890)</li>
+          <li>Mentionner les frais récurrents (25 ou 35 €/mois + 20 €/an de domaine)</li>
+          <li>Rappeler l'engagement initial (12 mois ou 1 an selon formule)</li>
+          <li>Joindre les CGV (engagement, modifs, propriété — voir <a href="../MEMO.md">MEMO.md §3</a>)</li>
+        </ul>
+
+        <h3>Suivi post-livraison</h3>
+        <ul class="checklist">
+          <li>J+7 : vérifier que le client a bien reçu sa première demande (s'il en a) et savoir comment il y a répondu</li>
+          <li>J+30 : envoyer un email demandant les modifications du mois (la 1 modif/mois incluse)</li>
+          <li>J+90 : rapport simple (visites du site, position Google sur 2-3 mots-clés) — fidélisation</li>
+          <li>J+365 : renouvellement à anticiper, demander 1 avis client à intégrer sur le site</li>
+        </ul>
+
+        <div class="callout callout--success">
+          <div class="callout__title">✓ Le travail bien fait</div>
+          <p>
+            Un client satisfait = 2-3 prospects qualifiés via recommandation. Le bouche-à-oreille local est ton meilleur canal d'acquisition.
+            Soigne particulièrement les 5 premiers clients : ce sont eux qui te porteront ensuite.
+          </p>
+        </div>
+
+        <h3>Récapitulatif temps moyen</h3>
+        <table>
+          <thead>
+            <tr><th>Étape</th><th>Temps estimé</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>1. Validation du brief</td><td>15 min</td></tr>
+            <tr><td>2. Création du client</td><td>5 min</td></tr>
+            <tr><td>3. Identité &amp; contact</td><td>15 min</td></tr>
+            <tr><td>4. Logo &amp; couleurs</td><td>30 min</td></tr>
+            <tr><td>5. Rédaction des sections</td><td>1h30 à 2h</td></tr>
+            <tr><td>6. Photos (upload + retouche)</td><td>45 min</td></tr>
+            <tr><td>7. Build &amp; quality check</td><td>30 min</td></tr>
+            <tr><td>8. Mise en ligne (sous-domaine)</td><td>5 min</td></tr>
+            <tr><td>8. Mise en ligne (domaine custom)</td><td>30 min</td></tr>
+            <tr><td>9. Email livraison + facturation</td><td>15 min</td></tr>
+            <tr><td><strong>TOTAL</strong></td><td><strong>4 à 5 h</strong></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="doc-footer">
+  <p>📘 Tutoriel interne — GéoClic Suite Pro · 2026</p>
+  <p style="margin-top:6px;">
+    Doc complète sur GitHub :
+    <a href="https://github.com/fredco30/site-builder/blob/main/docs/tuto-nouveau-client.html" target="_blank">site-builder/docs/tuto-nouveau-client.html</a>
+    · Voir aussi <a href="../MEMO.md">MEMO.md</a>
+  </p>
+</footer>
+
+</body>
+</html>
