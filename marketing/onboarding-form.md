@@ -14,7 +14,7 @@ Chaque question indique le champ correspondant dans `config.json` du dossier `cl
 - **Sauvegarde automatique** : activée
 - **Logique conditionnelle** : utilisée pour les sections optionnelles (avis, photos, etc.)
 - **Upload de fichiers** : activé (Tally permet jusqu'à 5 Mo / fichier, illimité en nombre)
-- **Notification email** : à `contact@geoclic.fr` à chaque soumission
+- **Notification email** : à `contact@geoclic.ovh` à chaque soumission
 - **Page de confirmation** : « Merci ! Vous recevrez votre maquette sous 3 jours ouvrés. »
 - **Champ caché** : `source` (utm_source) pour tracer d'où vient le lead
 

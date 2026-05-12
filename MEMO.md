@@ -292,7 +292,7 @@ Les `.env` sont dans `.gitignore`. Ne JAMAIS les pousser sur GitHub.
 
 - **GitHub** : fredco30
 - **Compte OVH** : (pour les VPS et DNS)
-- **Email pro** : contact@geoclic.fr
+- **Email pro** : contact@geoclic.ovh
 - **Compte Tally** : à créer pour le formulaire d'onboarding (voir `marketing/onboarding-form.md`)
 - **Compte Formspree** : pour recevoir les demandes de devis client par email
 

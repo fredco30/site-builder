@@ -55,7 +55,7 @@ Fichier : [`plaquette/index.html`](plaquette/index.html)
 
 **Personnalisation rapide** (à faire dans `plaquette/index.html`) :
 - Tarifs : chercher `300 €`, `25 €`, `590 €`, `35 €`, `890 €`, `490 €`, `250 €` et adapter
-- Coordonnées : chercher `contact@geoclic.fr` et `Frédéric Lopez`
+- Coordonnées : chercher `contact@geoclic.ovh` et `Frédéric Lopez`
 - URL du formulaire : chercher `tally.so/r/VOTRE_ID`
 - Témoignage client : section `.case__quote` (modifier le texte si HIPOLEM ne souhaite pas être cité, ou ajouter d'autres cas plus tard)
 
